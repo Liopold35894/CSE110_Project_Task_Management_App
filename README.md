@@ -7,6 +7,8 @@ This is the mostly empty template for the Successorator project.
 ## Getting Started
 
  - [ ] Look around the project.
+   - There is some filler code, you do not need to keep any of it.
+     - The slightly different `Observer`/`Subject` is a small preview of Lab 5...
    - The `docs/` directory may be helpful, as Slack/Discord messages are easy to lose.
      - This is a good place to put finalized user stories, standards, guidelines, meeting notes, etc
        that you want to stick with the repository in perpetuity (e.g. after the semester ends) e.g.
