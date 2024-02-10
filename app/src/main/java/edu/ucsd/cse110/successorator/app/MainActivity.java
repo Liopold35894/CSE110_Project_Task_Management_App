@@ -6,8 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import edu.ucsd.cse110.successorator.app.databinding.ActivityMainBinding;
+
+
 
 public class MainActivity extends AppCompatActivity {
     @Override
