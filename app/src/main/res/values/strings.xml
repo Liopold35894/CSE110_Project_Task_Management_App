@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Successorator</string>
-    <string name="placeholder">Placeholder</string>
+    <string name="app_title">Successorator</string>
     <string name="hello_world">Hello, World!</string>
+    <string name="cards_in_deck_text_format">Deck contains %d cards</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="swap_views">Swap Views</string>
+    <string name="empty_text">No goals for the Day. Click the + at the upper right to enter your Most Important Thing.</string>
+    <string name="_456">456</string>
+    <string name="todo">TODO</string>
+    <string name="todo2">TODO</string>
+    <string name="card_front_text">Card Front Text</string>
 </resources>

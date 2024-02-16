@@ -1,6 +1,3 @@
-**REMEMBER TO DELETE ANY IRRELEVANT TEMPLATE PROMPT TEXT BEFORE SUBMITTING**
-**KEEP IT SHORT AND SWEET**
-
 # Abstract
 
 Please include a summary of the changes and the related issue. At minimum, describe:
@@ -22,16 +19,14 @@ that they are linked to this PR and automatically closed when the PR is merged.
 
 Closes #(issue)
 
-## Type of Change
+## Type of change
 
-Please delete options that are not relevant.
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Other (explain below)
 
-- New feature (non-breaking change which adds functionality)
-- Bug fix (non-breaking change which fixes an issue)
-- Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- Other (explain below)
-
-# Testing
+# How Has This Been Tested?
 
 Describe the tests that you wrote to verify your changes, or any manual testing you performed to
 verify your changes. Provide instructions so we can reproduce. Note that **only** manually testing
