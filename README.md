@@ -1,22 +1,4 @@
-# Team X - Successorator 
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/Gl5sbms3)
+# Software Engineering Cards
 
----
-
-This is the mostly empty template for the Successorator project.
-
-## Getting Started
-
- - [ ] Look around the project.
-   - There is some filler code, you do not need to keep any of it.
-     - The slightly different `Observer`/`Subject` is a small preview of Lab 5...
-   - The `docs/` directory may be helpful, as Slack/Discord messages are easy to lose.
-     - This is a good place to put finalized user stories, standards, guidelines, meeting notes, etc
-       that you want to stick with the repository in perpetuity (e.g. after the semester ends) e.g.
-       for portfolio purposes.
-     - Google Docs is easier for collaboration, but eventually you might want to put the
-       finalized versions here for reference. (This way you can also reference them in PRs!)
- - [ ] Modify the `.github/pull_request_template.md` to suit your needs.
-   - You **do not** need to use the exact same template, but justify your changes when you 
-     PR the updated template.
- - [ ] Replace this README with something appropriate.
-   - **When you do, replace the title to replace X with your team number.**
+Reference app used in CSE 110 Winter 2024 labs.

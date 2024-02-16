@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Successorator"
+rootProject.name = "SECards"
 include(":app")
 include(":lib")
