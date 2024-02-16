@@ -89,6 +89,16 @@ public class MainViewModel extends ViewModel {
         }
     }
 
+    public void toggleCompleted(Goal goal) {
+
+        var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
+        goalRepository.save(newGoal);
+        // remove the goal
+        goalRepository.remove(goal.getId());
+        goalRepository.append(newGoal);
+
+    }
+
     public Subject<String> getDisplayedText() {
         return displayedText;
     }

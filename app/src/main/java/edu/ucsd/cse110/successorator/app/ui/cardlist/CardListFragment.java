@@ -57,7 +57,7 @@ public class CardListFragment extends Fragment {
         this.adapter = new CardListAdapter(requireContext(), List.of(), id -> {
             var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
             dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
-        });
+        }, activityModel::toggleCompleted);
         activityModel.getOrderedCards().observe(cards -> {
             if (cards == null) return;
             adapter.clear();
@@ -69,6 +69,8 @@ public class CardListFragment extends Fragment {
 
 
     }
+
+
 
     @Nullable
     @Override

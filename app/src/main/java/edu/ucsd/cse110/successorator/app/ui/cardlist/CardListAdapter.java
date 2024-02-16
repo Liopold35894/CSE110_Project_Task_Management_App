@@ -21,9 +21,10 @@ import edu.ucsd.cse110.successorator.lib.domain.Goal;
 public class CardListAdapter extends ArrayAdapter<Goal> {
 
     Consumer<Integer> onDeleteClick;
+Consumer<Goal> toggleCompleted;
 
 
-    public CardListAdapter(Context context, List<Goal> goals, Consumer<Integer> onDeleteClick) {
+    public CardListAdapter(Context context, List<Goal> goals, Consumer<Integer> onDeleteClick,  Consumer<Goal> togggleCompleted) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
         //
@@ -31,6 +32,7 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
         // or it will crash!
         super(context, 0, new ArrayList<>(goals));
         this.onDeleteClick = onDeleteClick;
+        this.toggleCompleted = togggleCompleted;
     }
 
     @NonNull
@@ -54,20 +56,21 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
         // Populate the view with the flashcard's data.
         binding.cardFrontText.setText(goal.getName());
         //this is the way to use strikethrough
-        binding.cardFrontText.setPaintFlags(binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//        binding.cardFrontText.setPaintFlags(binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-//        if (goal.isFinished()) {
-//            binding..setPaintFlags( binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//        } else {
-//            binding.cardFrontText.setPaintFlags( binding.cardFrontText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-//        }
+        if (goal.isFinished()) {
+            binding.cardFrontText.setPaintFlags( binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            binding.cardFrontText.setPaintFlags( binding.cardFrontText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+
         binding.cardDeleteButton.setOnClickListener(v -> {
             var id = goal.getId();
             assert id != null;
             onDeleteClick.accept(id);
-
-
         });
+
+        binding.cardFrontText.setOnClickListener(v -> toggleCompleted.accept(goal));
 
 
 
