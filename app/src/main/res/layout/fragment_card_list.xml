@@ -30,17 +30,17 @@
         app:layout_constraintStart_toStartOf="@+id/card_list"
         app:layout_constraintTop_toTopOf="@+id/card_list" />
 
+
     <ImageButton
         android:id="@+id/createCardButton"
         android:layout_width="65dp"
         android:layout_height="64dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="#FFFFFF"
+        android:src="@drawable/add"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?android:attr/textColorSecondary"
-        tools:src="@drawable/add"
-        android:contentDescription="@string/todo" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/finishedList"
