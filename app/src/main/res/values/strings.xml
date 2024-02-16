@@ -7,4 +7,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="swap_views">Swap Views</string>
     <string name="empty_text">No goals for the Day. Click the + at the upper right to enter your Most Important Thing.</string>
+    <string name="_456">456</string>
+    <string name="todo">TODO</string>
+    <string name="todo2">TODO</string>
+    <string name="card_front_text">Card Front Text</string>
 </resources>

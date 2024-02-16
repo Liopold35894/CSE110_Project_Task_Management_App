@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:text="456"
+        android:text="@string/_456"
         app:layout_constraintBottom_toBottomOf="@+id/card_list"
         app:layout_constraintEnd_toEndOf="@+id/card_list"
         app:layout_constraintStart_toStartOf="@+id/card_list"
@@ -41,6 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?android:attr/textColorSecondary"
-        tools:src="@drawable/add" />
+        tools:src="@drawable/add"
+        android:contentDescription="@string/todo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
