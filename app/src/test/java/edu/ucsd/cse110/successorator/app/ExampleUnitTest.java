@@ -1,4 +1,4 @@
-package edu.ucsd.cse110.secards.app;
+package edu.ucsd.cse110.successorator.app;
 
 import static org.junit.Assert.assertEquals;
 

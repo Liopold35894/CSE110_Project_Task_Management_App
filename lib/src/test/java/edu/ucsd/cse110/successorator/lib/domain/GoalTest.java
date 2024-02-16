@@ -1,10 +1,8 @@
-package edu.ucsd.cse110.secards.lib.domain;
+package edu.ucsd.cse110.successorator.lib.domain;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
-import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 public class GoalTest {
     @Test
