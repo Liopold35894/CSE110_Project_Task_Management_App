@@ -64,11 +64,7 @@ Consumer<Goal> toggleCompleted;
             binding.cardFrontText.setPaintFlags( binding.cardFrontText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
-        binding.cardDeleteButton.setOnClickListener(v -> {
-            var id = goal.getId();
-            assert id != null;
-            onDeleteClick.accept(id);
-        });
+
 
         binding.cardFrontText.setOnClickListener(v -> toggleCompleted.accept(goal));
 

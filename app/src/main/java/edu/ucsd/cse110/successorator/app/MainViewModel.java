@@ -90,12 +90,22 @@ public class MainViewModel extends ViewModel {
     }
 
     public void toggleCompleted(Goal goal) {
-
-        var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
-        goalRepository.save(newGoal);
-        // remove the goal
-        goalRepository.remove(goal.getId());
-        goalRepository.append(newGoal);
+        //if ggoal is unfinished we do this
+        if (!goal.isFinished()) {
+            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
+            goalRepository.save(newGoal);
+            // remove the goal
+            goalRepository.remove(goal.getId());
+            goalRepository.append(newGoal);
+        }
+        //if goal is finished we do this
+        else {
+            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
+            goalRepository.save(newGoal);
+            // remove the goal
+            goalRepository.remove(goal.getId());
+            goalRepository.prepend(newGoal);
+        }
 
     }
 
