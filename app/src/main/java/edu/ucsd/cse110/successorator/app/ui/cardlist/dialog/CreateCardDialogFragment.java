@@ -47,8 +47,8 @@ public class CreateCardDialogFragment extends DialogFragment {
         this.view = FragmentDialogCreateCardBinding.inflate(getLayoutInflater());
 
         return new AlertDialog.Builder(getActivity())
-                .setTitle("New Card")
-                .setMessage("Please provide the new card text.")
+                .setTitle("New Goal")
+                .setMessage("What's your next goal?")
                 .setView(view.getRoot())
                 .setPositiveButton("Create", this::onPositiveButtonClick)
                 .setNegativeButton("Cancel", this::onNegativeButtonClick)
