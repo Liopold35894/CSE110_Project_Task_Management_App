@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
+import java.util.stream.IntStream;
 
 public class SimpleGoalRepository implements GoalRepository {
     private final InMemoryDataSource dataSource;
@@ -45,6 +46,7 @@ public class SimpleGoalRepository implements GoalRepository {
                 goal.withSortOrder(dataSource.getMaxSortOrder()+1)
         );
     }
+
     @Override
     public void prepend(Goal goal){
         dataSource.shiftSortOrders(0, dataSource.getMaxSortOrder(), 1);
@@ -53,14 +55,25 @@ public class SimpleGoalRepository implements GoalRepository {
         );
     }
 
-    public Goal getUnfinishedGoals() {
-        return dataSource.getUnfinishedGoals();
+    @Override
+    public void addGoalBetweenFinishedAndUnfinished(Goal goal) {
+        // Get all the goals from the data source
+        List<Goal> allGoals = dataSource.getGoals();
+
+        // Find the index where the new goal should be inserted
+        int insertIndex = 0;
+
+        for (Goal existingGoal : allGoals) {
+            // If the existing goal is finished, stop searching and insert behind it
+            if (existingGoal.isFinished()) {
+                break;
+            }
+            insertIndex++;
+        }
+
+        // Insert the new goal at the calculated index
+        dataSource.shiftSortOrders(insertIndex, dataSource.getMaxSortOrder(), 1);
+        dataSource.putGoal(goal.withSortOrder(dataSource.getMinSortOrder() + insertIndex));
     }
-
-    public Goal getFinishedGoals() {
-        return dataSource.getFinishedGoals();
-    }
-
-
 
 }

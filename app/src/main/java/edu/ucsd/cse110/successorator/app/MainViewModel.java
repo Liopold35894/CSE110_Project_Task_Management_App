@@ -90,7 +90,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void toggleCompleted(Goal goal) {
-        //if ggoal is unfinished we do this
+        //if goal is unfinished we do this
         if (!goal.isFinished()) {
             var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
             goalRepository.save(newGoal);
@@ -136,7 +136,9 @@ public class MainViewModel extends ViewModel {
         return goalRepository.find(flashcardId).getValue();
     }
 
-
+    public void addBehindUnfinishedAndInFrontOfFinished(Goal card) {
+        goalRepository.addGoalBetweenFinishedAndUnfinished(card);
+    }
 
 
 

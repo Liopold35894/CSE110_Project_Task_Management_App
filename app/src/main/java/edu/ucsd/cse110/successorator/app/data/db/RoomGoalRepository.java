@@ -60,6 +60,11 @@ public class RoomGoalRepository implements GoalRepository {
     }
 
     @Override
+    public void addGoalBetweenFinishedAndUnfinished(Goal goal) {
+        goalDao.addGoalBetweenFinishedAndUnfinished(GoalEntity.fromGoal(goal));
+    }
+
+    @Override
     public void remove(int id){
         goalDao.delete(id);
     }

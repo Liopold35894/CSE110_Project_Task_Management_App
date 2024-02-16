@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import java.util.stream.IntStream;
 
 import java.util.List;
 
@@ -58,6 +59,31 @@ public interface GoalDao {
         );
         return Math.toIntExact(insert(newGoal));
     }
+    @Transaction
+    @Query("UPDATE goals SET sort_order = sort_order + 1 " +
+            "WHERE sort_order > :unfinishedMaxSortOrder AND sort_order <= :finishedMinSortOrder")
+    void shiftSortOrderBehindFinished(int unfinishedMaxSortOrder, int finishedMinSortOrder);
+
+    @Query("SELECT MAX(sort_order) FROM goals WHERE isFinished = 0")
+    int getMaxSortOrderUnfinished();
+
+    @Query("SELECT MIN(sort_order) FROM goals WHERE isFinished = 1")
+    int getMinSortOrderFinished();
+
+    @Transaction
+    default int addGoalBetweenFinishedAndUnfinished(GoalEntity goal) {
+        int unfinishedMaxSortOrder = getMaxSortOrderUnfinished();
+        int finishedMinSortOrder = getMinSortOrderFinished();
+
+        // Shift sort order behind finished goals
+        shiftSortOrderBehindFinished(unfinishedMaxSortOrder, finishedMinSortOrder);
+
+        // Insert the new goal in between
+        int newSortOrder = unfinishedMaxSortOrder + 1;
+        var newGoal = new GoalEntity(goal.name, goal.isFinished, newSortOrder);
+        return Math.toIntExact(insert(newGoal));
+    }
+
 
     @Query("DELETE FROM goals WHERE id = :id")
     void delete(int id);

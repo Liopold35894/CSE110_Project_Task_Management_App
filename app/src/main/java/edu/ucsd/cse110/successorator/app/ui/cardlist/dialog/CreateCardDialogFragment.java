@@ -59,7 +59,7 @@ public class CreateCardDialogFragment extends DialogFragment {
         var front = view.cardFrontEditText.getText().toString();
 
         var card = new Goal(0, front, false, -1);
-        activityModel.append(card);
+        activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
 
 
         dialog.dismiss();
