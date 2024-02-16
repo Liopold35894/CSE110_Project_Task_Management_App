@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,11 +20,17 @@ import edu.ucsd.cse110.successorator.app.R;
 import edu.ucsd.cse110.successorator.app.databinding.FragmentCardListBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 public class CardListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentCardListBinding view;
     private CardListAdapter adapter;
+
+    private ArrayAdapter<Goal> unfinishedAdapter;
+    private ArrayAdapter<Goal> finishedAdapter;
+    private List<Goal> unfinishedGoals;
+    private List<Goal> finishedGoals;
 
     public CardListFragment() {
         // Required empty public constructor
@@ -56,6 +64,10 @@ public class CardListFragment extends Fragment {
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
+        unfinishedAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, unfinishedGoals);
+        finishedAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, finishedGoals);
+
+
     }
 
     @Nullable
@@ -70,6 +82,8 @@ public class CardListFragment extends Fragment {
             var dialogFragment = CreateCardDialogFragment.newInstance();
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
+
+
 
         return view.getRoot();
     }

@@ -1,10 +1,12 @@
 package edu.ucsd.cse110.successorator.app.ui.cardlist;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import edu.ucsd.cse110.successorator.app.R;
 import edu.ucsd.cse110.successorator.app.databinding.ListItemCardBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
@@ -50,11 +53,24 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
 
         // Populate the view with the flashcard's data.
         binding.cardFrontText.setText(goal.getName());
+        //this is the way to use strikethrough
+        binding.cardFrontText.setPaintFlags(binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+//        if (goal.isFinished()) {
+//            binding..setPaintFlags( binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//        } else {
+//            binding.cardFrontText.setPaintFlags( binding.cardFrontText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+//        }
         binding.cardDeleteButton.setOnClickListener(v -> {
             var id = goal.getId();
             assert id != null;
             onDeleteClick.accept(id);
+
+
         });
+
+
+
 
         return binding.getRoot();
     }

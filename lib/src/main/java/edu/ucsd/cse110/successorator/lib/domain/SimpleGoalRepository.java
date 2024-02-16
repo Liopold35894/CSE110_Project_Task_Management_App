@@ -8,6 +8,9 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
 public class SimpleGoalRepository implements GoalRepository {
     private final InMemoryDataSource dataSource;
 
+    private List<Goal> unfinishedGoals;
+    private List<Goal> finishedGoals;
+
     public SimpleGoalRepository(InMemoryDataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -57,4 +60,7 @@ public class SimpleGoalRepository implements GoalRepository {
     public Goal getFinishedGoals() {
         return dataSource.getFinishedGoals();
     }
+
+
+
 }

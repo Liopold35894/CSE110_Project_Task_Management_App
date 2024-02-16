@@ -25,6 +25,7 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<Goal> topCard;
     private final MutableSubject<String> displayedText;
 
+
     public static final ViewModelInitializer<MainViewModel> initializer =
         new ViewModelInitializer<>(
             MainViewModel.class,
@@ -109,6 +110,14 @@ public class MainViewModel extends ViewModel {
     public void prepend(Goal card) {
         goalRepository.prepend(card);
     }
+
+
+    public Goal get(int flashcardId) {
+        return goalRepository.find(flashcardId).getValue();
+    }
+
+
+
 
 
 }
