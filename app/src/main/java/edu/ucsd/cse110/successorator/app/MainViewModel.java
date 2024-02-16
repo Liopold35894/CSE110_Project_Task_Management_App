@@ -132,8 +132,8 @@ public class MainViewModel extends ViewModel {
     }
 
 
-    public Goal get(int flashcardId) {
-        return goalRepository.find(flashcardId).getValue();
+    public Goal get(int goalId) {
+        return goalRepository.find(goalId).getValue();
     }
 
     public void addBehindUnfinishedAndInFrontOfFinished(Goal card) {
