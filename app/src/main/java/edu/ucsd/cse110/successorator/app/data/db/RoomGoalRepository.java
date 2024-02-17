@@ -65,10 +65,6 @@ public class RoomGoalRepository implements GoalRepository {
     }
 
     @Override
-    public void deleteFinished() {
-        return;
-    }
-    @Override
     public void remove(int id){
         goalDao.delete(id);
     }
