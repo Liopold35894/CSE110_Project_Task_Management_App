@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
@@ -35,6 +36,8 @@ public class CardListFragment extends Fragment {
     private List<Goal> unfinishedGoals;
     private List<Goal> finishedGoals;
 
+    private Calendar date;
+
     public CardListFragment() {
         // Required empty public constructor
     }
@@ -49,6 +52,7 @@ public class CardListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.date = Calendar.getInstance();
 
         // Initialize the Model
         var modelOwner = requireActivity();
@@ -91,11 +95,10 @@ public class CardListFragment extends Fragment {
         view.forward.setOnClickListener(v -> {
             // Simulate the passing of 24 hours
             // You need to implement this method in your MainViewModel class
-            activityModel.forwardTimeBy24Hours();
-            var calendar = Calendar.getInstance();
+//            activityModel.forwardTimeBy24Hours();
 
-            calendar.add(Calendar.HOUR_OF_DAY, 24);
-            var currentDate = calendar.getTime();
+            date.add(Calendar.HOUR_OF_DAY, 24);
+            var currentDate = date.getTime();
 
             var dateFormat = DateFormat.getDateInstance().format(currentDate);
             this.view.currentDate.setText(dateFormat);
