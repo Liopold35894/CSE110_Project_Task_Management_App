@@ -22,6 +22,9 @@ import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDia
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 public class CardListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentCardListBinding view;
@@ -93,6 +96,12 @@ public class CardListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        var calendar = Calendar.getInstance().getTime();
+        var dateFormat = DateFormat.getDateInstance().format(calendar);
+
+        this.view.currentDate.setText(dateFormat);
+
         // Observe isGoalRepositoryEmpty and update the TextView
         activityModel.getIsEmpty().observe(isEmpty -> {
             if (isEmpty) {
