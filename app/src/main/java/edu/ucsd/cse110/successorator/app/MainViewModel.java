@@ -113,13 +113,6 @@ public class MainViewModel extends ViewModel {
             return isEmpty;
         }
     }
-    public void forwardTimeBy24Hours() {
-        // Create an intent for the ClearFinishedGoalsReceiver
-        Intent intent = new Intent(context, ClearFinishedGoalsReceiver.class);
-
-        // Trigger the receiver directly
-        context.sendBroadcast(intent);
-    }
 
 
     public void toggleCompleted(Goal goal) {

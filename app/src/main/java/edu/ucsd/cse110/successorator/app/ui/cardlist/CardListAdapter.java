@@ -21,7 +21,7 @@ import edu.ucsd.cse110.successorator.lib.domain.Goal;
 public class CardListAdapter extends ArrayAdapter<Goal> {
 
     Consumer<Integer> onDeleteClick;
-Consumer<Goal> toggleCompleted;
+    Consumer<Goal> toggleCompleted;
 
 
     public CardListAdapter(Context context, List<Goal> goals, Consumer<Integer> onDeleteClick,  Consumer<Goal> togggleCompleted) {
