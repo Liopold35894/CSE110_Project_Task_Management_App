@@ -165,4 +165,8 @@ public class MainViewModel extends ViewModel {
     public void addBehindUnfinishedAndInFrontOfFinished(Goal card) {
         goalRepository.addGoalBetweenFinishedAndUnfinished(card);
     }
+
+    public void removeFinishedGoals() {
+        goalRepository.removeFinishedGoals();
+    }
 }

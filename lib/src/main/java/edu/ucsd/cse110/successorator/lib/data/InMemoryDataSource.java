@@ -196,4 +196,15 @@ public class InMemoryDataSource {
                 .findFirst()
                 .orElse(null);
     }
+
+    public void removeFinishedGoals() {
+        var finishedGoals = goals.values().stream()
+                .filter(Goal::isFinished)
+                .collect(Collectors.toList());
+
+        for (Goal goal : finishedGoals) {
+            removeGoal(goal.getId());
+        }
+    }
+
 }

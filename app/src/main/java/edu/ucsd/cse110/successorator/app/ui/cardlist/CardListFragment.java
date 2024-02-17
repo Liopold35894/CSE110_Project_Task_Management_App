@@ -99,6 +99,7 @@ public class CardListFragment extends Fragment {
 
             var dateFormat = DateFormat.getDateInstance().format(currentDate);
             this.view.currentDate.setText(dateFormat);
+            activityModel.removeFinishedGoals();
             var cards = activityModel.getOrderedCards().getValue().stream().filter((goal -> !goal.isFinished())).collect(Collectors.toList());
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
