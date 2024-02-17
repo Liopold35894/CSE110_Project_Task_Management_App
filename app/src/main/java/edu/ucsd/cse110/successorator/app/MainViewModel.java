@@ -2,9 +2,16 @@ package edu.ucsd.cse110.successorator.app;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,10 +39,10 @@ public class MainViewModel extends ViewModel {
             creationExtras -> {
                 var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                 assert app != null;
-                return new MainViewModel(app.getGoalRepository());
+                return new MainViewModel(app.getGoalRepository(), app.getApplicationContext());
             });
 
-    public MainViewModel(GoalRepository goalRepository) {
+    public MainViewModel(GoalRepository goalRepository, Context context) {
         this.goalRepository = goalRepository;
 
         // Create the observable subjects.
@@ -76,8 +83,23 @@ public class MainViewModel extends ViewModel {
 
             displayedText.setValue(card.getName());
         });
+        scheduleAlarmToClearFinishedGoals(context);
 
+    }
+    private void scheduleAlarmToClearFinishedGoals(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, ClearFinishedGoalsReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
+        // Set the time to 2:00
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 2);
+        calendar.set(Calendar.MINUTE, 0);
+
+        // Set the alarm to repeat every day at 2:00
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
     }
     public Subject<Boolean> getIsEmpty() {
 
@@ -139,7 +161,4 @@ public class MainViewModel extends ViewModel {
     public void addBehindUnfinishedAndInFrontOfFinished(Goal card) {
         goalRepository.addGoalBetweenFinishedAndUnfinished(card);
     }
-
-
-
 }
