@@ -32,6 +32,8 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<Goal> topCard;
     private final MutableSubject<String> displayedText;
 
+    private Context context;
+
 
     public static final ViewModelInitializer<MainViewModel> initializer =
         new ViewModelInitializer<>(
@@ -50,6 +52,7 @@ public class MainViewModel extends ViewModel {
         this.orderedCards = new SimpleSubject<>();
         this.topCard = new SimpleSubject<>();
         this.displayedText = new SimpleSubject<>();
+        this.context = context;
 
 
         // When the list of cards changes (or is first loaded), reset the ordering.
@@ -110,6 +113,14 @@ public class MainViewModel extends ViewModel {
             return isEmpty;
         }
     }
+    public void forwardTimeBy24Hours() {
+        // Create an intent for the ClearFinishedGoalsReceiver
+        Intent intent = new Intent(context, ClearFinishedGoalsReceiver.class);
+
+        // Trigger the receiver directly
+        context.sendBroadcast(intent);
+    }
+
 
     public void toggleCompleted(Goal goal) {
         //if goal is unfinished we do this

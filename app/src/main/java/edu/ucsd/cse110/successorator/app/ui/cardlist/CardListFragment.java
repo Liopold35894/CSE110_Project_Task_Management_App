@@ -88,6 +88,19 @@ public class CardListFragment extends Fragment {
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
+        view.forward.setOnClickListener(v -> {
+            // Simulate the passing of 24 hours
+            // You need to implement this method in your MainViewModel class
+            activityModel.forwardTimeBy24Hours();
+            var calendar = Calendar.getInstance();
+
+            calendar.add(Calendar.HOUR_OF_DAY, 24);
+            var currentDate = calendar.getTime();
+
+            var dateFormat = DateFormat.getDateInstance().format(currentDate);
+            this.view.currentDate.setText(dateFormat);
+        });
+
 
 
         return view.getRoot();
