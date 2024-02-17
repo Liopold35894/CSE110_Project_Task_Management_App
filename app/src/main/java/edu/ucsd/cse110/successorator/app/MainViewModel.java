@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
+import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
@@ -18,6 +19,7 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
 public class MainViewModel extends ViewModel {
     // Domain state (true "Model" state)
     private final GoalRepository goalRepository;
+    private final TimeKeeper timeKeeper;
 
     // UI state
     private final MutableSubject<Boolean> isEmpty;
@@ -32,11 +34,12 @@ public class MainViewModel extends ViewModel {
             creationExtras -> {
                 var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                 assert app != null;
-                return new MainViewModel(app.getGoalRepository());
+                return new MainViewModel(app.getGoalRepository(), app.getTimeKeeper());
             });
 
-    public MainViewModel(GoalRepository goalRepository) {
+    public MainViewModel(GoalRepository goalRepository, TimeKeeper timeKeeper) {
         this.goalRepository = goalRepository;
+        this.timeKeeper = timeKeeper;
 
         // Create the observable subjects.
         this.isEmpty = new SimpleSubject<>();
