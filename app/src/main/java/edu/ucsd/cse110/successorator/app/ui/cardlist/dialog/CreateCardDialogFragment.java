@@ -56,8 +56,11 @@ public class CreateCardDialogFragment extends DialogFragment {
     }
 
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
+        //add card if it is name is not empty
         var front = view.cardFrontEditText.getText().toString();
-
+        if (front.isEmpty()) {
+            return;
+        }
         var card = new Goal(0, front, false, -1);
         activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
 
