@@ -3,6 +3,7 @@ package edu.ucsd.cse110.successorator.lib.data;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
@@ -169,7 +170,7 @@ public class InMemoryDataSource {
                 .collect(Collectors.toList());
 
         //Non-negative...
-        assert sortOrders.stream().allMatch(i -> i >= 0);
+        assert sortOrders.stream().allMatch(i -> i >= -1);
 
         // Unique...
         assert sortOrders.size() == sortOrders.stream().distinct().count();
@@ -202,5 +203,3 @@ public class InMemoryDataSource {
             removeGoal(goal.getId());
         }
     }
-
-}

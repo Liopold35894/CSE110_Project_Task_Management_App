@@ -55,4 +55,8 @@ public class SuccessoratorApplication extends Application {
     public GoalRepository getGoalRepository() {
         return goalRepository;
     }
+
+    public TimeKeeper getTimeKeeper() {
+        return timeKeeper;
+    }
 }

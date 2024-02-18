@@ -28,7 +28,6 @@ public class MainViewModel extends ViewModel {
     private final GoalRepository goalRepository;
     private final TimeKeeper timeKeeper;
 
-
     // UI state
     private final MutableSubject<Boolean> isEmpty;
     private final MutableSubject<List<Goal>> orderedCards;
@@ -47,6 +46,7 @@ public class MainViewModel extends ViewModel {
 
     public MainViewModel(GoalRepository goalRepository, TimeKeeper timeKeeper) {
         this.goalRepository = goalRepository;
+        this.timeKeeper = timeKeeper;
 
         // Create the observable subjects.
         this.isEmpty = new SimpleSubject<>();
@@ -60,6 +60,7 @@ public class MainViewModel extends ViewModel {
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {
                 this.isEmpty.setValue(Boolean.TRUE);
+                this.displayedText.setValue("No goals for the Day. Click the + at the upper right to enter your Most Important Thing.");
                 return; // not ready yet, ignore
             }
             this.isEmpty.setValue(Boolean.FALSE);

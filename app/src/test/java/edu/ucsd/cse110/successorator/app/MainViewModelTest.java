@@ -215,6 +215,5 @@ public class MainViewModelTest {
             assertEquals(result.get(i), EXPECTED.get(i));
         }
     }
-
-
 }
+

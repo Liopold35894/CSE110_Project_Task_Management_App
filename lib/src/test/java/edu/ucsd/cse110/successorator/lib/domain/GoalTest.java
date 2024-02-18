@@ -11,7 +11,7 @@ public class GoalTest {
     Goal testGoal1 = new Goal(0, "testGoal", false, 0); // first test
     Goal testGoal2 = new Goal(1000000000," ", true, 1); // string with only 1 space and a large enough id
     Goal testGoal3 = new Goal(10, "", false, 2); // string with only an empty string
-
+    Goal testGoal4 = new Goal(15, "test", false, 3);
     @Test
     public void testGetName() {
         assertEquals(testGoal1.getName(), "testGoal");
