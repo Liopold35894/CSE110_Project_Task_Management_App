@@ -8,10 +8,13 @@ import edu.ucsd.cse110.successorator.app.data.db.RoomGoalRepository;
 import edu.ucsd.cse110.successorator.app.data.db.SuccessoratorDatabase;
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
+import edu.ucsd.cse110.successorator.lib.domain.SimpleTimeKeeper;
+import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 
 public class SuccessoratorApplication extends Application {
     private InMemoryDataSource dataSource;
     private GoalRepository goalRepository;
+    private TimeKeeper timeKeeper;
 
     @Override
     public void onCreate() {
@@ -31,6 +34,7 @@ public class SuccessoratorApplication extends Application {
                 .build();
 
         this.goalRepository = new RoomGoalRepository(database.goalDao());
+        this.timeKeeper = new SimpleTimeKeeper();
 
         // Populate the database with some initial data on the first run.
         var sharedPreferences = getSharedPreferences("successorator", MODE_PRIVATE);
@@ -47,5 +51,9 @@ public class SuccessoratorApplication extends Application {
 
     public GoalRepository getGoalRepository() {
         return goalRepository;
+    }
+
+    public TimeKeeper getTimeKeeper() {
+        return timeKeeper;
     }
 }

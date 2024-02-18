@@ -16,9 +16,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /* Put date elsewhere
         var calendar = Calendar.getInstance().getTime();
         var dateFormat = DateFormat.getDateInstance().format(calendar);
         setTitle(dateFormat);
+        */
+
+        setTitle("Successorator");
 
         this.view = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());

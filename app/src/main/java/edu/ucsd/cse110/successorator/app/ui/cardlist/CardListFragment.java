@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,11 +20,20 @@ import edu.ucsd.cse110.successorator.app.R;
 import edu.ucsd.cse110.successorator.app.databinding.FragmentCardListBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
+
+import java.text.DateFormat;
+import java.util.Calendar;
 
 public class CardListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentCardListBinding view;
     private CardListAdapter adapter;
+
+    private ArrayAdapter<Goal> unfinishedAdapter;
+    private ArrayAdapter<Goal> finishedAdapter;
+    private List<Goal> unfinishedGoals;
+    private List<Goal> finishedGoals;
 
     public CardListFragment() {
         // Required empty public constructor
@@ -49,14 +60,20 @@ public class CardListFragment extends Fragment {
         this.adapter = new CardListAdapter(requireContext(), List.of(), id -> {
             var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
             dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
-        });
+        }, activityModel::toggleCompleted);
         activityModel.getOrderedCards().observe(cards -> {
             if (cards == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
+        unfinishedAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, unfinishedGoals);
+        finishedAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, finishedGoals);
+
+
     }
+
+
 
     @Nullable
     @Override
@@ -71,12 +88,20 @@ public class CardListFragment extends Fragment {
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
+
+
         return view.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        var calendar = Calendar.getInstance().getTime();
+        var dateFormat = DateFormat.getDateInstance().format(calendar);
+
+        this.view.currentDate.setText(dateFormat);
+
         // Observe isGoalRepositoryEmpty and update the TextView
         activityModel.getIsEmpty().observe(isEmpty -> {
             if (isEmpty) {

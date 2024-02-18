@@ -10,5 +10,8 @@
     <string name="_456">456</string>
     <string name="todo">TODO</string>
     <string name="todo2">TODO</string>
-    <string name="card_front_text">Card Front Text</string>
+    <string name="card_front_text"> <strike>Card Front Text</strike></string>
+    <string name="card_front_Text_finished"> <strike>Card Front Text Finished</strike></string>
+
+
 </resources>

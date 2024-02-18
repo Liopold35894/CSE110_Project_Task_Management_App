@@ -11,6 +11,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 public class ConfirmDeleteCardDialogFragment extends DialogFragment {
     private static final String ARG_FLASHCARD_ID = "flashcard_id";
@@ -44,7 +45,6 @@ public class ConfirmDeleteCardDialogFragment extends DialogFragment {
 
         this.activityModel = modelProvider.get(MainViewModel.class);
 
-
     }
 
     @NonNull
@@ -58,9 +58,13 @@ public class ConfirmDeleteCardDialogFragment extends DialogFragment {
                 .create();
     }
 
+    //I need not only remove from the curlist
+    //but also add to the other list
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
+
         activityModel.remove(flashcardId); // wait... how do we know which ID?
-        dialog.dismiss();
+
+        dialog.dismiss();;
     }
 
     private void onNegativeButtonClick(DialogInterface dialog, int which) {

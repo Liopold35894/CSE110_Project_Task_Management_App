@@ -47,8 +47,8 @@ public class CreateCardDialogFragment extends DialogFragment {
         this.view = FragmentDialogCreateCardBinding.inflate(getLayoutInflater());
 
         return new AlertDialog.Builder(getActivity())
-                .setTitle("New Card")
-                .setMessage("Please provide the new card text.")
+                .setTitle("New Goal")
+                .setMessage("What's your next goal?")
                 .setView(view.getRoot())
                 .setPositiveButton("Create", this::onPositiveButtonClick)
                 .setNegativeButton("Cancel", this::onNegativeButtonClick)
@@ -56,10 +56,13 @@ public class CreateCardDialogFragment extends DialogFragment {
     }
 
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
+        //add card if it is name is not empty
         var front = view.cardFrontEditText.getText().toString();
-
+        if (front.isEmpty()) {
+            return;
+        }
         var card = new Goal(0, front, false, -1);
-        activityModel.append(card);
+        activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
 
 
         dialog.dismiss();

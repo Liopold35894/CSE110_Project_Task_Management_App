@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
+import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
@@ -18,6 +19,7 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
 public class MainViewModel extends ViewModel {
     // Domain state (true "Model" state)
     private final GoalRepository goalRepository;
+    private final TimeKeeper timeKeeper;
 
     // UI state
     private final MutableSubject<Boolean> isEmpty;
@@ -25,17 +27,19 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<Goal> topCard;
     private final MutableSubject<String> displayedText;
 
+
     public static final ViewModelInitializer<MainViewModel> initializer =
         new ViewModelInitializer<>(
             MainViewModel.class,
             creationExtras -> {
                 var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                 assert app != null;
-                return new MainViewModel(app.getGoalRepository());
+                return new MainViewModel(app.getGoalRepository(), app.getTimeKeeper());
             });
 
-    public MainViewModel(GoalRepository goalRepository) {
+    public MainViewModel(GoalRepository goalRepository, TimeKeeper timeKeeper) {
         this.goalRepository = goalRepository;
+        this.timeKeeper = timeKeeper;
 
         // Create the observable subjects.
         this.isEmpty = new SimpleSubject<>();
@@ -48,6 +52,7 @@ public class MainViewModel extends ViewModel {
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {
                 this.isEmpty.setValue(Boolean.TRUE);
+                this.displayedText.setValue("No goals for the Day. Click the + at the upper right to enter your Most Important Thing.");
                 return; // not ready yet, ignore
             }
             this.isEmpty.setValue(Boolean.FALSE);
@@ -88,6 +93,26 @@ public class MainViewModel extends ViewModel {
         }
     }
 
+    public void toggleCompleted(Goal goal) {
+        //if goal is unfinished we do this
+        if (!goal.isFinished()) {
+            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
+            goalRepository.save(newGoal);
+            // remove the goal
+            goalRepository.remove(goal.getId());
+            goalRepository.append(newGoal);
+        }
+        //if goal is finished we do this
+        else {
+            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
+            goalRepository.save(newGoal);
+            // remove the goal
+            goalRepository.remove(goal.getId());
+            goalRepository.prepend(newGoal);
+        }
+
+    }
+
     public Subject<String> getDisplayedText() {
         return displayedText;
     }
@@ -109,6 +134,16 @@ public class MainViewModel extends ViewModel {
     public void prepend(Goal card) {
         goalRepository.prepend(card);
     }
+
+
+    public Goal get(int goalId) {
+        return goalRepository.find(goalId).getValue();
+    }
+
+    public void addBehindUnfinishedAndInFrontOfFinished(Goal card) {
+        goalRepository.addGoalBetweenFinishedAndUnfinished(card);
+    }
+
 
 
 }
