@@ -54,6 +54,7 @@ public class MainViewModel extends ViewModel {
         this.topCard = new SimpleSubject<>();
         this.displayedText = new SimpleSubject<>();
 
+
         // When the list of cards changes (or is first loaded), reset the ordering.
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {
