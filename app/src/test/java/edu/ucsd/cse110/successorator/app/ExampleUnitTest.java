@@ -33,11 +33,11 @@ public class ExampleUnitTest {
         // (Initialization in ViewModel constructor simulates this)
 
         // THEN the empty message is displayed
-        assertEquals("No goals for the Day", model.getDisplayedText().getValue());
+        assertEquals("No goals for the Day. Click the + at the upper right to enter your Most Important Thing.", model.getDisplayedText().getValue());
     }
 
     @Test
-    void example() {
+    public void example() {
         // GIVEN
         var dataSource = new InMemoryDataSource();
         List<Goal> DEFAULT_CARDS = List.of(
@@ -52,10 +52,5 @@ public class ExampleUnitTest {
         var repo = new SimpleGoalRepository(dataSource);
         var timeKeeper = new SimpleTimeKeeper();
         var model = new MainViewModel(repo, timeKeeper);
-
-    }
-    @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
     }
 }
