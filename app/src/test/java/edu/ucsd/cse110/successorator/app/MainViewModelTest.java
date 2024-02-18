@@ -106,13 +106,18 @@ public class MainViewModelTest {
 
         // WHEN adding a new goal
         Goal newGoal = new Goal(1, null, false, 1);
-        model.prepend(newGoal);
+        try {
+            model.prepend(newGoal);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Goal name cannot be null", e.getMessage());
+        }
 
         // THEN the goal list should contain the new goal
         List<Goal> goals = model.getOrderedCards().getValue();
-        assertEquals(2, goals.size());
-        assertEquals(null, goals.get(0).getName());
-        assertEquals("Watering Plant", goals.get(1).getName());
+        assertEquals(1, goals.size());
+        //assertEquals(null, goals.get(0).getName());
+        assertEquals("Watering Plant", goals.get(0).getName());
     }
 
 
