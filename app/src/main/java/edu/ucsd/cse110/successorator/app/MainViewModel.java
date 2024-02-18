@@ -52,6 +52,7 @@ public class MainViewModel extends ViewModel {
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {
                 this.isEmpty.setValue(Boolean.TRUE);
+                this.displayedText.setValue("No goals for the Day. Click the + at the upper right to enter your Most Important Thing.");
                 return; // not ready yet, ignore
             }
             this.isEmpty.setValue(Boolean.FALSE);
