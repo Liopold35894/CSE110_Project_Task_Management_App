@@ -33,11 +33,7 @@ public class InMemoryDataSource {
     }
 
     public final static List<Goal> DEFAULT_CARDS = List.of(
-            new Goal(0, "Midterm Tomorrow", false, 0),
-            new Goal(1, "Watering Plant", false, 1),
-            new Goal(2, "Pay Tax", false, 2),
-            new Goal(3, "Feed Pet", false, 3),
-            new Goal(4, "Send Message", false, 4)
+
     );
 
     public static InMemoryDataSource fromDefault() {
@@ -198,4 +194,13 @@ public class InMemoryDataSource {
                 .orElse(null);
     }
 
+    public void removeFinishedGoals() {
+        var finishedGoals = goals.values().stream()
+                .filter(Goal::isFinished)
+                .collect(Collectors.toList());
+
+        for (Goal goal : finishedGoals) {
+            removeGoal(goal.getId());
+        }
+    }
 }

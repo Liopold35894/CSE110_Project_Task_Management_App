@@ -192,6 +192,28 @@ public class MainViewModelTest {
 
     }
 
+    @Test
+    public void removeFinishedGoals(){
+        List<Goal> DEFAULT_CARDS = List.of(
+                new Goal(0, "Midterm Tomorrow", false, 0),
+                new Goal(1, "Watering Plant", false, 1),
+                new Goal(2, "Pay Tax", false, 2),
+                new Goal(3, "Feed Pet", true, 3),
+                new Goal(4, "Send Message", true, 4)
+        );
 
+        dataSource.putGoals(DEFAULT_CARDS);
+        model.removeFinishedGoals();
 
+        List<Goal> result = model.getOrderedCards().getValue();
+        List<Goal> EXPECTED = List.of(
+                new Goal(0, "Midterm Tomorrow", false, 0),
+                new Goal(1, "Watering Plant", false, 1),
+                new Goal(2, "Pay Tax", false, 2)
+        );
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(result.get(i), EXPECTED.get(i));
+        }
+    }
 }
+

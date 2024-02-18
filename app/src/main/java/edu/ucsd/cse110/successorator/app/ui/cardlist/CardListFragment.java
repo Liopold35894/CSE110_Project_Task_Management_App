@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
@@ -21,19 +23,19 @@ import edu.ucsd.cse110.successorator.app.databinding.FragmentCardListBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
+import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class CardListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentCardListBinding view;
     private CardListAdapter adapter;
 
-    private ArrayAdapter<Goal> unfinishedAdapter;
-    private ArrayAdapter<Goal> finishedAdapter;
-    private List<Goal> unfinishedGoals;
-    private List<Goal> finishedGoals;
+    private Calendar date;
 
     public CardListFragment() {
         // Required empty public constructor
@@ -49,6 +51,7 @@ public class CardListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.date = Calendar.getInstance();
 
         // Initialize the Model
         var modelOwner = requireActivity();
@@ -67,8 +70,6 @@ public class CardListFragment extends Fragment {
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
-        unfinishedAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, unfinishedGoals);
-        finishedAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, finishedGoals);
 
 
     }
@@ -86,6 +87,23 @@ public class CardListFragment extends Fragment {
         view.createCardButton.setOnClickListener(v -> {
             var dialogFragment = CreateCardDialogFragment.newInstance();
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
+        });
+
+        view.forward.setOnClickListener(v -> {
+            // Simulate the passing of 24 hours
+            // You need to implement this method in your MainViewModel class
+//            activityModel.forwardTimeBy24Hours();
+
+            date.add(Calendar.HOUR_OF_DAY, 24);
+            var currentDate = date.getTime();
+
+            var dateFormat = DateFormat.getDateInstance().format(currentDate);
+            this.view.currentDate.setText(dateFormat);
+            activityModel.removeFinishedGoals();
+            var cards = activityModel.getOrderedCards().getValue().stream().filter((goal -> !goal.isFinished())).collect(Collectors.toList());
+            adapter.clear();
+            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
+            adapter.notifyDataSetChanged();
         });
 
 
@@ -112,5 +130,12 @@ public class CardListFragment extends Fragment {
             }
 
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
     }
 }

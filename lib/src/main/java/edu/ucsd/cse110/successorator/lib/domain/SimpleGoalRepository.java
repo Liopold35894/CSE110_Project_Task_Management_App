@@ -91,4 +91,9 @@ public class SimpleGoalRepository implements GoalRepository {
         dataSource.putGoal(goal.withSortOrder(dataSource.getMinSortOrder() + insertIndex));
     }
 
+    @Override
+    public void removeFinishedGoals() {
+        dataSource.removeFinishedGoals();
+    }
+
 }

@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /* Put date elsewhere
+        /* Put date cardlist fragment
         var calendar = Calendar.getInstance().getTime();
         var dateFormat = DateFormat.getDateInstance().format(calendar);
         setTitle(dateFormat);
