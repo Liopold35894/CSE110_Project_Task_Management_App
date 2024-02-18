@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
+import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
@@ -25,14 +26,14 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
 public class MainViewModel extends ViewModel {
     // Domain state (true "Model" state)
     private final GoalRepository goalRepository;
+    private final TimeKeeper timeKeeper;
+
 
     // UI state
     private final MutableSubject<Boolean> isEmpty;
     private final MutableSubject<List<Goal>> orderedCards;
     private final MutableSubject<Goal> topCard;
     private final MutableSubject<String> displayedText;
-
-    private Context context;
 
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -41,10 +42,10 @@ public class MainViewModel extends ViewModel {
             creationExtras -> {
                 var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                 assert app != null;
-                return new MainViewModel(app.getGoalRepository(), app.getApplicationContext());
+                return new MainViewModel(app.getGoalRepository(), app.getTimeKeeper());
             });
 
-    public MainViewModel(GoalRepository goalRepository, Context context) {
+    public MainViewModel(GoalRepository goalRepository, TimeKeeper timeKeeper) {
         this.goalRepository = goalRepository;
 
         // Create the observable subjects.
@@ -52,7 +53,7 @@ public class MainViewModel extends ViewModel {
         this.orderedCards = new SimpleSubject<>();
         this.topCard = new SimpleSubject<>();
         this.displayedText = new SimpleSubject<>();
-        this.context = context;
+        this.timeKeeper = timeKeeper;
 
 
         // When the list of cards changes (or is first loaded), reset the ordering.
@@ -86,8 +87,6 @@ public class MainViewModel extends ViewModel {
 
             displayedText.setValue(card.getName());
         });
-        scheduleAlarmToClearFinishedGoals(context);
-
     }
     private void scheduleAlarmToClearFinishedGoals(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
