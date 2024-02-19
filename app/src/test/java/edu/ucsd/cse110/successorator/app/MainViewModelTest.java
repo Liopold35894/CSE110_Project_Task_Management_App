@@ -54,7 +54,7 @@ public class MainViewModelTest {
 
 
 
-    //  US 2 Scenario 2: List is not empty
+    //  US 2 Scenario 2.1: List is not empty
     //    Given there exists some tasks
     //    When the user tap on the plus sign on the top right
     //    Then a keyboard came up
@@ -157,6 +157,58 @@ public class MainViewModelTest {
         assertEquals("Watering Plant", newFirstUnifinishedGoal.getName());
         assertEquals(expectedFirstUnfinishedGoal, newFirstUnifinishedGoal);
     }
+    // US 3 Scenario 1.2: The target goal is not marked as finished (with only finished goals
+    //    Given there's only finished goals other than the goal we are trying to mark as finished in the list
+    //    When the user tap on that goal
+    //    Then the goal is moved down to the bottom of the list
+    //    And the goal appears in strike-through
+    @Test
+    public void markGoalAsCompletedWithOnlyFinishedGoals() {
+        List<Goal> ONE_GOAL = List.of(
+                new Goal(0, "Midterm Tomorrow", false, 0),
+                new Goal(1, "Watering Plant", true, 1),
+                new Goal(2, "Pay Tax", true, 2),
+                new Goal(3, "Feed Pet", true, 3),
+                new Goal(4, "Send Message", true, 4)
+        );
+        // initialize it with default or custom data
+        dataSource.putGoals(ONE_GOAL);
+        Goal goalToMark = model.getOrderedCards().getValue().get(0);
+
+        model.toggleCompleted(goalToMark);
+
+        List<Goal> result = model.getOrderedCards().getValue();
+        Goal EXPECTED = new Goal(0, "Midterm Tomorrow", true, 0);
+        assertEquals(result.get(4).isFinished, EXPECTED.isFinished);
+        assertEquals(result.get(4).getId(), EXPECTED.getId());
+    }
+
+    // US 3 Scenario 1.3: The target goal is not marked as finished
+    //    Given there's only one goal in the list
+    //    AND the goal is not finished
+    //    When the user tap on that goal
+    //    Then the goal is moved down to the bottom of the list (which is no moving at all)
+    //    And the goal appears in strike-through
+    @Test
+    public void markGoalAsCompletedWithUnFinishedGoals() {
+        List<Goal> ONE_GOAL = List.of(
+                new Goal(0, "Midterm Tomorrow", false, 0),
+                new Goal(1, "Watering Plant", false, 1),
+                new Goal(2, "Pay Tax", false, 2),
+                new Goal(3, "Feed Pet", false, 3),
+                new Goal(4, "Send Message", false, 4)
+        );
+        // initialize it with default or custom data
+        dataSource.putGoals(ONE_GOAL);
+        Goal goalToMark = model.getOrderedCards().getValue().get(1);
+
+        model.toggleCompleted(goalToMark);
+
+        List<Goal> result = model.getOrderedCards().getValue();
+        Goal EXPECTED = new Goal(1, "Watering Plant", true, 1);
+        assertEquals(result.get(4).isFinished, EXPECTED.isFinished);
+        assertEquals(result.get(4).getId(), EXPECTED.getId());
+    }
 
     // US 3 Scenario 2: The target goal is marked as finished
     //    Given the goal is in the list
@@ -189,6 +241,32 @@ public class MainViewModelTest {
         Goal actualFirstGoal = model.getOrderedCards().getValue().get(0);
         assertEquals("Send Message", actualFirstGoal.getName());
 
+    }
+
+    // US 3 Scenario 2.2: The target goal is not marked as finished (with only finished goals
+    //    Given there's only finished goals other than the goal we are trying to mark as finished in the list
+    //    When the user tap on that goal
+    //    Then the goal is moved down to the bottom of the list
+    //    And the goal appears in strike-through
+    @Test
+    public void undoGoalCompletedWithOnlyFinishedGoals() {
+        List<Goal> FINISHED_GOAL = List.of(
+                new Goal(0, "Midterm Tomorrow", true, 0),
+                new Goal(1, "Watering Plant", true, 1),
+                new Goal(2, "Pay Tax", true, 2),
+                new Goal(3, "Feed Pet", true, 3),
+                new Goal(4, "Send Message", true, 4)
+        );
+        // initialize it with default or custom data
+        dataSource.putGoals(FINISHED_GOAL);
+        Goal goalToMark = model.getOrderedCards().getValue().get(3);
+
+        model.toggleCompleted(goalToMark);
+
+        List<Goal> result = model.getOrderedCards().getValue();
+        Goal EXPECTED = new Goal(3, "Feed Pet", false, 3);
+        assertEquals(result.get(0).isFinished, EXPECTED.isFinished);
+        assertEquals(result.get(0).getId(), EXPECTED.getId());
     }
 
     // US 4 Scenario 1: User has unfinished goals as well as finished ones.
