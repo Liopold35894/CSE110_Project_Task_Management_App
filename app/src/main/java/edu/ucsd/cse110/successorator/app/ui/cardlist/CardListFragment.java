@@ -91,8 +91,6 @@ public class CardListFragment extends Fragment {
 
         view.forward.setOnClickListener(v -> {
             // Simulate the passing of 24 hours
-            // You need to implement this method in your MainViewModel class
-//            activityModel.forwardTimeBy24Hours();
 
             date.add(Calendar.HOUR_OF_DAY, 24);
             var currentDate = date.getTime();
@@ -130,12 +128,12 @@ public class CardListFragment extends Fragment {
             }
 
         });
+        activityModel.scheduleToClearFinishedGoals(requireContext());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-
+        activityModel.scheduleToClearFinishedGoals(requireContext());
     }
 }
