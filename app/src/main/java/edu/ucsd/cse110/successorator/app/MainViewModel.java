@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
@@ -88,20 +89,33 @@ public class MainViewModel extends ViewModel {
             displayedText.setValue(card.getName());
         });
     }
-    private void scheduleAlarmToClearFinishedGoals(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, ClearFinishedGoalsReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+    public void scheduleToClearFinishedGoals(Context context) {
+        Calendar currentTime = Calendar.getInstance();
+        currentTime.setTimeInMillis(System.currentTimeMillis());
 
-        // Set the time to 2:00
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 2);
-        calendar.set(Calendar.MINUTE, 0);
+        SharedPreferences prefs = context.getSharedPreferences("successorator", Context.MODE_PRIVATE);
+        long nextClear = prefs.getLong("nextClear", 0);
+        Calendar nextClearTime = Calendar.getInstance();
 
-        // Set the alarm to repeat every day at 2:00
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
+        if (nextClear > 0) {
+
+            nextClearTime.setTimeInMillis(nextClear);
+
+            if (currentTime.after(nextClearTime)) {
+                goalRepository.removeFinishedGoals();
+            }
+        }
+        nextClearTime.setTimeInMillis(System.currentTimeMillis());
+        nextClearTime.set(Calendar.HOUR_OF_DAY, 2);
+        nextClearTime.set(Calendar.MINUTE, 0);
+
+        if (nextClearTime.before(currentTime)) {
+            nextClearTime.add(Calendar.HOUR_OF_DAY, 24);
+        }
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("nextClear", nextClearTime.getTimeInMillis());
+        editor.apply();
     }
     public Subject<Boolean> getIsEmpty() {
 
