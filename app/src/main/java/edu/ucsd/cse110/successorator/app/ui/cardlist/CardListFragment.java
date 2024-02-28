@@ -2,6 +2,9 @@ package edu.ucsd.cse110.successorator.app.ui.cardlist;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -9,7 +12,9 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
@@ -35,6 +40,8 @@ public class CardListFragment extends Fragment {
     private FragmentCardListBinding view;
     private CardListAdapter adapter;
 
+    private MyMenuProvider menuProvider;
+
     private Calendar date;
 
     public CardListFragment() {
@@ -52,6 +59,36 @@ public class CardListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.date = Calendar.getInstance();
+
+//        requireActivity().addMenuProvider(new MyMenuProvider() {
+//            @Override
+//            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+//                menuInflater.inflate(R.menu.action_bar, menu);
+//            }
+//
+//
+//        });
+
+
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.action_bar, menu);
+            }
+
+            @Override
+            public void onPrepareMenu(@NonNull Menu menu) {
+                MenuItem todayItem = menu.findItem(R.id.today);
+                if (todayItem != null) {
+                    todayItem.setVisible(false);
+                }
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                return false;
+            }
+        });
 
         // Initialize the Model
         var modelOwner = requireActivity();
@@ -73,6 +110,7 @@ public class CardListFragment extends Fragment {
 
 
     }
+
 
 
 
@@ -136,4 +174,6 @@ public class CardListFragment extends Fragment {
         super.onResume();
         activityModel.scheduleToClearFinishedGoals(requireContext());
     }
+
+
 }
