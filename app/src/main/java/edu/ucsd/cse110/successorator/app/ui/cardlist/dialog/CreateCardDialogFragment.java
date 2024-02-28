@@ -10,6 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import edu.ucsd.cse110.successorator.app.MainViewModel;
 import edu.ucsd.cse110.successorator.app.databinding.FragmentDialogCreateCardBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
@@ -57,11 +60,12 @@ public class CreateCardDialogFragment extends DialogFragment {
 
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
         //add card if it is name is not empty
+        Date date = new Date();
         var front = view.cardFrontEditText.getText().toString();
         if (front.isEmpty()) {
             return;
         }
-        var card = new Goal(0, front, false, -1);
+        var card = new Goal(0, front, false, -1, date, Goal.RepeatInterval.ONE_TIME);
         activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
 
 

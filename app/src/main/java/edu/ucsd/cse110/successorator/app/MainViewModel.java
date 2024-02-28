@@ -131,7 +131,7 @@ public class MainViewModel extends ViewModel {
     public void toggleCompleted(Goal goal) {
         //if goal is unfinished we do this
         if (!goal.isFinished()) {
-            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
+            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder(), goal.getDate(), goal.getRepeatInterval());
             goalRepository.save(newGoal);
             // remove the goal
             goalRepository.remove(goal.getId());
@@ -139,7 +139,7 @@ public class MainViewModel extends ViewModel {
         }
         //if goal is finished we do this
         else {
-            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder());
+            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder(), goal.getDate(), goal.getRepeatInterval());
             goalRepository.save(newGoal);
             // remove the goal
             goalRepository.remove(goal.getId());

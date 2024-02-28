@@ -1,16 +1,19 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
+
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class SimpleGoalRepository implements GoalRepository {
     private final InMemoryDataSource dataSource;
 
-    private List<Goal> unfinishedGoals;
-    private List<Goal> finishedGoals;
+
 
     public SimpleGoalRepository(InMemoryDataSource dataSource) {
         this.dataSource = dataSource;
@@ -90,6 +93,31 @@ public class SimpleGoalRepository implements GoalRepository {
         dataSource.shiftSortOrders(insertIndex, dataSource.getMaxSortOrder(), 1);
         dataSource.putGoal(goal.withSortOrder(dataSource.getMinSortOrder() + insertIndex));
     }
+
+//    public List<Goal> getTomorrowsGoals() {
+//        // Get the current date
+//        Date today = new Date();
+//
+//        // Create a Calendar object and set it to tomorrow's date
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(today);
+//        calendar.add(Calendar.DATE, 1);
+//        Date tomorrow = calendar.getTime();
+//
+//        // Get all the goals from the data source
+//        List<Goal> allGoals = dataSource.getGoals();
+//
+//        // Filter the goals to get the ones that are due tomorrow
+//        List<Goal> tomorrowsGoals = allGoals.stream()
+//                .filter(goal -> {
+//                    if (goal.getDate().equals(tomorrow)) {
+//                        return true;
+//                    }
+//                    return false;
+//                })
+//                .collect(Collectors.toList());
+//        return tomorrowsGoals;
+//    }
 
     @Override
     public void removeFinishedGoals() {
