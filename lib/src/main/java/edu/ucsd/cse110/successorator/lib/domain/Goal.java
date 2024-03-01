@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -23,6 +24,20 @@ public class Goal implements Serializable {
         WEEKLY,
         MONTHLY,
         YEARLY
+    }
+
+    public Goal(
+            @NonNull Integer id,
+            @Nullable String name,
+            boolean isFinished,
+            int sortOrder
+    ) {
+        this.id = id;
+        this.name = name;
+        this.isFinished = isFinished;
+        this.sortOrder = sortOrder;
+        this.date = new Date();
+        this.repeatInterval = RepeatInterval.ONE_TIME;
     }
 
     public Goal(
