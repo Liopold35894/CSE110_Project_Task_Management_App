@@ -2,18 +2,18 @@ package edu.ucsd.cse110.successorator.app;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
-import java.text.DateFormat;
-import java.util.Calendar;
+import androidx.fragment.app.Fragment;
 
 import edu.ucsd.cse110.successorator.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.CardListFragment;
+import edu.ucsd.cse110.successorator.app.ui.cardlist.TomorrowFragment;
+
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding view;
@@ -28,20 +28,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view.getRoot());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar, menu);
+        return true;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         var itemId = item.getItemId();
 
-        if (itemId == R.id.action_bar_menu_swap_views) {
-            swapFragments();
+        if (itemId == R.id.tomorrow) {
+            swapFragments(TomorrowFragment.newInstance());
+        }
+
+        if (itemId == R.id.today) {
+            swapFragments(CardListFragment.newInstance());
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void swapFragments() {
-
+    private void swapFragments(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 
 
