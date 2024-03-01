@@ -103,11 +103,11 @@ public class Goal implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Goal goal = (Goal) o;
-        return sortOrder == goal.sortOrder && Objects.equals(name, goal.name) && Objects.equals(id, goal.id) && Objects.equals(date, goal.date);
+        return Objects.equals(name, goal.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, id, date, sortOrder);
+        return Objects.hash(name, date, sortOrder);
     }
 }
