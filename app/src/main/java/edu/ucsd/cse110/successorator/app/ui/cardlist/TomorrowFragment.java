@@ -60,15 +60,6 @@ public class TomorrowFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.date = Calendar.getInstance();
 
-//        requireActivity().addMenuProvider(new MyMenuProvider() {
-//            @Override
-//            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-//                menuInflater.inflate(R.menu.action_bar, menu);
-//            }
-//
-//
-//        });
-
 
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
@@ -157,8 +148,10 @@ public class TomorrowFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        var calendar = Calendar.getInstance().getTime();
-        var dateFormat = DateFormat.getDateInstance().format(calendar);
+        date.add(Calendar.HOUR_OF_DAY, 24);
+        var tomorrowDate = date.getTime();
+
+        var dateFormat = DateFormat.getDateInstance().format(tomorrowDate);
 
         this.view.currentDate.setText(dateFormat);
         this.view.emptyText.setVisibility(View.GONE);
