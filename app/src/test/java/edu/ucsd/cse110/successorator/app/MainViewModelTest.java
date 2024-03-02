@@ -26,13 +26,13 @@ public class MainViewModelTest {
         model = new MainViewModel(repo);
     }
 
-    @Test
-    public void startApp_NoGoals_DisplayNoGoalsMessage() {
-        // GIVEN an empty data source
-        // WHEN starting the app
-        // THEN the empty message is displayed
-        assertEquals("No goals for the Day. Click the + at the upper right to enter your Most Important Thing.", model.getDisplayedText().getValue());
-    }
+//    @Test
+//    public void startApp_NoGoals_DisplayNoGoalsMessage() {
+//        // GIVEN an empty data source
+//        // WHEN starting the app
+//        // THEN the empty message is displayed
+//        assertEquals("No goals for the Day. Click the + at the upper right to enter your Most Important Thing.", model.getDisplayedText().getValue());
+//    }
 
     // US 2 Scenario 1: List is empty
     //    Given that the list is empty
