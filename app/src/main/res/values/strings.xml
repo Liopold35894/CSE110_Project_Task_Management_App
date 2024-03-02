@@ -12,6 +12,7 @@
     <string name="todo2">TODO</string>
     <string name="card_front_text"> <strike>Card Front Text</strike></string>
     <string name="card_front_Text_finished"> <strike>Card Front Text Finished</strike></string>
+    <string name="empty_text_tomorrow">No goal for tomorrow</string>
 
 
 </resources>

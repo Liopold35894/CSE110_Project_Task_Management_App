@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.app.ui.cardlist;
 
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +33,7 @@ import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -125,7 +127,7 @@ public class CardListFragment extends Fragment {
         view.cardList.setAdapter(adapter);
 
         view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreateCardDialogFragment.newInstance();
+            var dialogFragment = CreateCardDialogFragment.newInstance("today");
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
@@ -154,9 +156,11 @@ public class CardListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         var calendar = Calendar.getInstance().getTime();
-        var dateFormat = DateFormat.getDateInstance().format(calendar);
 
-        this.view.currentDate.setText(dateFormat);
+        var dateFormat = new SimpleDateFormat("EEE M/dd", Locale.getDefault());
+        var formattedDate = dateFormat.format(calendar);
+
+        this.view.currentDate.setText(String.format("Today %s", formattedDate));
 
         // Observe isGoalRepositoryEmpty and update the TextView
         activityModel.getIsEmpty().observe(isEmpty -> {
@@ -166,7 +170,6 @@ public class CardListFragment extends Fragment {
             } else {
                 this.view.emptyText.setVisibility(View.GONE);
             }
-
         });
         activityModel.scheduleToClearFinishedGoals(requireContext());
     }
