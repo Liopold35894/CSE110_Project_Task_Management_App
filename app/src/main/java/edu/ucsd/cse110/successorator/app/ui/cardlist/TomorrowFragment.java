@@ -44,7 +44,7 @@ public class TomorrowFragment extends Fragment {
 
     private MyMenuProvider menuProvider;
 
-    private Calendar date;
+    private Date date;
 
     public TomorrowFragment() {
         // Required empty public constructor
@@ -60,7 +60,9 @@ public class TomorrowFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.date = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);  // Add 1 day to get tomorrow's date
+        this.date = calendar.getTime();
 
 
         requireActivity().addMenuProvider(new MenuProvider() {
@@ -96,11 +98,11 @@ public class TomorrowFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new CardListAdapter(requireContext(), List.of(), id -> {
+        this.adapter = new CardListAdapter(requireContext(), List.of(), date, id -> {
             var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
             dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
         }, activityModel::toggleCompleted);
-        activityModel.getOrderedCards().observe(cards -> {
+        activityModel.getTomorrowGoals().observe(cards -> {
             if (cards == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
@@ -129,11 +131,8 @@ public class TomorrowFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        date.add(Calendar.HOUR_OF_DAY, 24);
-        var tomorrowDate = date.getTime();
-
         var dateFormat = new SimpleDateFormat("EEE M/dd", Locale.getDefault());
-        var formattedDate = dateFormat.format(tomorrowDate);
+        var formattedDate = dateFormat.format(date);
 
         this.view.currentDate.setText(String.format("Tomorrow %s", formattedDate));
 
@@ -155,6 +154,5 @@ public class TomorrowFragment extends Fragment {
         super.onResume();
         activityModel.scheduleToClearFinishedGoals(requireContext());
     }
-
 
 }

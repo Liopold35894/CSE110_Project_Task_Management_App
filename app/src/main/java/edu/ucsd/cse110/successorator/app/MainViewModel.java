@@ -12,8 +12,10 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,13 +29,18 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
 public class MainViewModel extends ViewModel {
     // Domain state (true "Model" state)
     private final GoalRepository goalRepository;
-    private final TimeKeeper timeKeeper;
-
     // UI state
     private final MutableSubject<Boolean> isEmpty;
     private final MutableSubject<List<Goal>> orderedCards;
     private final MutableSubject<Goal> topCard;
     private final MutableSubject<String> displayedText;
+
+    private final MutableSubject<List<Goal>> todayGoal;
+
+    private final MutableSubject<List<Goal>> tomorrowGoal;
+
+
+    private Date date;
 
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -42,26 +49,27 @@ public class MainViewModel extends ViewModel {
             creationExtras -> {
                 var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                 assert app != null;
-                return new MainViewModel(app.getGoalRepository(), app.getTimeKeeper());
+                return new MainViewModel(app.getGoalRepository());
             });
 
-    public MainViewModel(GoalRepository goalRepository, TimeKeeper timeKeeper) {
+    public MainViewModel(GoalRepository goalRepository) {
         this.goalRepository = goalRepository;
-        this.timeKeeper = timeKeeper;
 
         // Create the observable subjects.
+        this.date = new Date();
         this.isEmpty = new SimpleSubject<>();
         this.orderedCards = new SimpleSubject<>();
         this.topCard = new SimpleSubject<>();
         this.displayedText = new SimpleSubject<>();
+        this.todayGoal = new SimpleSubject<>();
+        this.tomorrowGoal = new SimpleSubject<>();
 
 
         // When the list of cards changes (or is first loaded), reset the ordering.
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {
                 this.isEmpty.setValue(Boolean.TRUE);
-                this.displayedText.setValue("No goals for the Day. Click the + at the upper right to enter your Most Important Thing.");
-                return; // not ready yet, ignore
+                return;
             }
             this.isEmpty.setValue(Boolean.FALSE);
 
@@ -70,6 +78,25 @@ public class MainViewModel extends ViewModel {
                     .collect(Collectors.toList());
 
             orderedCards.setValue(newOrderedCards);
+
+            var todayGoals = cards.stream()
+                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .filter(goal -> isSameDay(goal.getDate(), this.date))
+                    .collect(Collectors.toList());
+
+            this.todayGoal.setValue(todayGoals);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            Date tomorrowDate = calendar.getTime();
+
+            var tomorrowGoals = cards.stream()
+                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .filter(goal -> isSameDay(goal.getDate(), tomorrowDate))
+                    .collect(Collectors.toList());
+
+            this.tomorrowGoal.setValue(tomorrowGoals);
+
         });
 
         // When the ordering changes, update the top card.
@@ -88,6 +115,14 @@ public class MainViewModel extends ViewModel {
 
             displayedText.setValue(card.getName());
         });
+    }
+
+    public Subject<List<Goal>> getTodayGoals() {
+        return todayGoal;
+    }
+
+    public Subject<List<Goal>> getTomorrowGoals() {
+        return tomorrowGoal;
     }
     public void scheduleToClearFinishedGoals(Context context) {
         Calendar currentTime = Calendar.getInstance();
@@ -146,6 +181,15 @@ public class MainViewModel extends ViewModel {
             goalRepository.prepend(newGoal);
         }
 
+    }
+
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
     public Subject<String> getDisplayedText() {

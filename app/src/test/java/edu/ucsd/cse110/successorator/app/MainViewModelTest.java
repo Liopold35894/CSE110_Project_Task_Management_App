@@ -23,7 +23,7 @@ public class MainViewModelTest {
         dataSource = new InMemoryDataSource();
         repo = new SimpleGoalRepository(dataSource);
         timeKeeper = new SimpleTimeKeeper();
-        model = new MainViewModel(repo, timeKeeper);
+        model = new MainViewModel(repo);
     }
 
     @Test

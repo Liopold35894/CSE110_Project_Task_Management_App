@@ -27,7 +27,7 @@ public class ExampleUnitTest {
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleGoalRepository(dataSource);
         var timeKeeper = new SimpleTimeKeeper();
-        var model = new MainViewModel(repo, timeKeeper);
+        var model = new MainViewModel(repo);
 
         // WHEN starting the app
         // (Initialization in ViewModel constructor simulates this)
@@ -51,6 +51,6 @@ public class ExampleUnitTest {
         dataSource.putGoals(DEFAULT_CARDS);
         var repo = new SimpleGoalRepository(dataSource);
         var timeKeeper = new SimpleTimeKeeper();
-        var model = new MainViewModel(repo, timeKeeper);
+        var model = new MainViewModel(repo);
     }
 }
