@@ -35,7 +35,7 @@ import java.util.Calendar;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class CardListFragment extends Fragment {
+public class TomorrowFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentCardListBinding view;
     private CardListAdapter adapter;
@@ -44,14 +44,12 @@ public class CardListFragment extends Fragment {
 
     private Calendar date;
 
-    private boolean isMenuProviderAdded = false;
-
-    public CardListFragment() {
+    public TomorrowFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance() {
-        Fragment fragment = new CardListFragment();
+        Fragment fragment = new TomorrowFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -62,35 +60,32 @@ public class CardListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.date = Calendar.getInstance();
 
-        if (!isMenuProviderAdded) {
-            requireActivity().addMenuProvider(new MenuProvider() {
-                @Override
-                public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-//                    menuInflater.inflate(R.menu.action_bar, menu);
+
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+            }
+
+            @Override
+            public void onPrepareMenu(@NonNull Menu menu) {
+                MenuItem thisItem = menu.findItem(R.id.tomorrow);
+                if (thisItem != null) {
+                    thisItem.setVisible(false);
                 }
 
-                @Override
-                public void onPrepareMenu(@NonNull Menu menu) {
-                    MenuItem thisItem = menu.findItem(R.id.today);
-                    if (thisItem != null) {
-                        thisItem.setVisible(false);
-                    }
-                    thisItem = menu.findItem(R.id.tomorrow);
-                    if (thisItem != null) {
-                        thisItem.setVisible(true);
-                    }
+                thisItem = menu.findItem(R.id.today);
+                if (thisItem != null) {
+                    thisItem.setVisible(true);
                 }
 
+            }
 
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                return false;
+            }
 
-                @Override
-                public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                    return false;
-                }
-            });
-
-            this.isMenuProviderAdded = true;
-        }
+        });
 
         // Initialize the Model
         var modelOwner = requireActivity();
@@ -153,21 +148,14 @@ public class CardListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        var calendar = Calendar.getInstance().getTime();
-        var dateFormat = DateFormat.getDateInstance().format(calendar);
+        date.add(Calendar.HOUR_OF_DAY, 24);
+        var tomorrowDate = date.getTime();
+
+        var dateFormat = DateFormat.getDateInstance().format(tomorrowDate);
 
         this.view.currentDate.setText(dateFormat);
+        this.view.emptyText.setVisibility(View.GONE);
 
-        // Observe isGoalRepositoryEmpty and update the TextView
-        activityModel.getIsEmpty().observe(isEmpty -> {
-            if (isEmpty) {
-                this.view.emptyText.setText(R.string.empty_text);
-                this.view.emptyText.setVisibility(View.VISIBLE);
-            } else {
-                this.view.emptyText.setVisibility(View.GONE);
-            }
-
-        });
         activityModel.scheduleToClearFinishedGoals(requireContext());
     }
 
