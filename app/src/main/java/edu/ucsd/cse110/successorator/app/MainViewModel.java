@@ -36,7 +36,7 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<List<Goal>> pendingGoals;
 
 
-    private Date date;
+    private final Date date;
 
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -82,7 +82,7 @@ public class MainViewModel extends ViewModel {
                     .filter(goal -> !goal.getDate().after(this.date))
                     .collect(Collectors.toList());
 
-            this.pendingGoals.setValue(todayGoals);
+            this.todayGoal.setValue(todayGoals);
 
             var pending = cards.stream()
                     .filter(goal -> goal.getDate() == null)
@@ -129,6 +129,10 @@ public class MainViewModel extends ViewModel {
 
     public Subject<List<Goal>> getTomorrowGoals() {
         return tomorrowGoal;
+    }
+
+    public Subject<List<Goal>> getPendingGoals() {
+        return pendingGoals;
     }
     public void scheduleToClearFinishedGoals(Context context, Date date) {
         Calendar currentTime = Calendar.getInstance();

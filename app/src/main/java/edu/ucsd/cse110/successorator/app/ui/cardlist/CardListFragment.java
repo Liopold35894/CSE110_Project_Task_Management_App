@@ -159,8 +159,8 @@ public class CardListFragment extends Fragment {
         this.view.currentDate.setText(String.format("Today %s", formattedDate));
 
         // Observe isGoalRepositoryEmpty and update the TextView
-        activityModel.getIsEmpty().observe(isEmpty -> {
-            if (isEmpty) {
+        activityModel.getTodayGoals().observe(goals -> {
+            if (goals == null || goals.size() == 0 ) {
                 this.view.emptyText.setText(R.string.empty_text);
                 this.view.emptyText.setVisibility(View.VISIBLE);
             } else {

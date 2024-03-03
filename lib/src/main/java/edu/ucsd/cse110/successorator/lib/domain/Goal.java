@@ -103,7 +103,7 @@ public class Goal implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Goal goal = (Goal) o;
-        return Objects.equals(name, goal.name);
+        return Objects.equals(name, goal.name) && Objects.equals(id,goal.id);
     }
 
     @Override
