@@ -42,8 +42,6 @@ public class TomorrowFragment extends Fragment {
     private FragmentTomorrowBinding view;
     private CardListAdapter adapter;
 
-    private MyMenuProvider menuProvider;
-
     private Date date;
 
     public TomorrowFragment() {
