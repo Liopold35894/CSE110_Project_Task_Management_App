@@ -81,7 +81,7 @@ public class MainViewModel extends ViewModel {
 
             var todayGoals = cards.stream()
                     .sorted(Comparator.comparingInt(Goal::sortOrder))
-                    .filter(goal -> isSameDay(goal.getDate(), this.date))
+                    .filter(goal -> !goal.getDate().after(this.date))
                     .collect(Collectors.toList());
 
             this.todayGoal.setValue(todayGoals);

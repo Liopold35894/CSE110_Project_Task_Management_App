@@ -136,8 +136,8 @@ public class TomorrowFragment extends Fragment {
 
         this.view.currentDate.setText(String.format("Tomorrow %s", formattedDate));
 
-        activityModel.getIsEmpty().observe(isEmpty -> {
-            if (isEmpty) {
+        activityModel.getTomorrowGoals().observe(goals -> {
+            if (goals.size() == 0) {
                 this.view.emptyText.setText(R.string.empty_text_tomorrow);
                 this.view.emptyText.setVisibility(View.VISIBLE);
             } else {
@@ -145,14 +145,11 @@ public class TomorrowFragment extends Fragment {
             }
 
         });
-
-        activityModel.scheduleToClearFinishedGoals(requireContext());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        activityModel.scheduleToClearFinishedGoals(requireContext());
     }
 
 }
