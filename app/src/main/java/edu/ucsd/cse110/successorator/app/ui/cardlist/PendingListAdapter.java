@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,43 +16,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
-import edu.ucsd.cse110.successorator.app.R;
 import edu.ucsd.cse110.successorator.app.databinding.ListItemCardBinding;
+import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragment;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
-public class CardListAdapter extends ArrayAdapter<Goal> {
+public class PendingListAdapter extends ArrayAdapter<Goal> {
 
-    Consumer<Integer> onDeleteClick;
-    Consumer<Goal> toggleCompleted;
+    Consumer<Integer> onLongPress;
 
-    private Date date;
-
-
-    public CardListAdapter(Context context, List<Goal> goals, Date date, Consumer<Integer> onDeleteClick, Consumer<Goal> togggleCompleted) {
-        // This sets a bunch of stuff internally, which we can access
-        // with getContext() and getItem() for example.
-        //
-        // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
-        // or it will crash!
+    public PendingListAdapter(Context context, List<Goal> goals, Consumer<Integer> onLongPress) {
         super(context, 0, new ArrayList<>(goals));
-        this.date = date;
-        this.onDeleteClick = onDeleteClick;
-        this.toggleCompleted = togggleCompleted;
+        this.onLongPress = onLongPress;
 
-        for (Goal goal : goals) {
-            if (isSameDay(goal.getDate(), date)) {
-                add(goal);
-            }
-        }
-    }
-
-    private boolean isSameDay(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.setTime(date1);
-        cal2.setTime(date2);
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
     @NonNull
@@ -72,18 +47,17 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
             var layoutInflater = LayoutInflater.from(getContext());
             binding = ListItemCardBinding.inflate(layoutInflater, parent, false);
         }
-
         // Populate the view with the flashcard's data.
         binding.cardFrontText.setText(goal.getName());
-        //this is the way to use strikethrough
-//        binding.cardFrontText.setPaintFlags(binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        int goalId = goal.getId();
+        binding.cardFrontText.setOnLongClickListener(v -> {
+            // Create a new instance of MoveGoalDialogFragment
+            MoveGoalDialogFragment dialogFragment = MoveGoalDialogFragment.newInstance(goalId);
+            // Show the dialog
+            dialogFragment.show(((FragmentActivity) v.getContext()).getSupportFragmentManager(), "MoveGoalDialogFragment");
 
-        if (goal.isFinished()) {
-            binding.cardFrontText.setPaintFlags( binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else {
-            binding.cardFrontText.setPaintFlags( binding.cardFrontText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
-        binding.cardFrontText.setOnClickListener(v -> toggleCompleted.accept(goal));
+            return true;
+        });
         return binding.getRoot();
     }
 

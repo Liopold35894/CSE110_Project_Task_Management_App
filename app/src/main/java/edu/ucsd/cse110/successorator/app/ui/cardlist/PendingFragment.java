@@ -26,14 +26,14 @@ import edu.ucsd.cse110.successorator.app.R;
 import edu.ucsd.cse110.successorator.app.databinding.FragmentPendingBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
+import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreatePendingDialogFragment;
+import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragment;
 
 public class PendingFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentPendingBinding view;
-    private CardListAdapter adapter;
-
+    private PendingListAdapter adapter;
     private Date date;
-
     private boolean isMenuProviderAdded = false;
 
     public PendingFragment() {
@@ -75,8 +75,6 @@ public class PendingFragment extends Fragment {
                     }
                 }
 
-
-
                 @Override
                 public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                     return false;
@@ -93,22 +91,17 @@ public class PendingFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new CardListAdapter(requireContext(), List.of(), date, id -> {
-            var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
-            dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
-        }, activityModel::toggleCompleted);
-        activityModel.getTodayGoals().observe(cards -> {
+        this.adapter = new PendingListAdapter(requireContext(), List.of(), id -> {
+            var dialogFragment = MoveGoalDialogFragment.newInstance(id);
+            dialogFragment.show(getParentFragmentManager(), "MoveGoalDialogFragment");
+        });
+        activityModel.getPendingGoals().observe(cards -> {
             if (cards == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
-
-
     }
-
-
-
 
     @Nullable
     @Override
@@ -119,30 +112,25 @@ public class PendingFragment extends Fragment {
         view.cardList.setAdapter(adapter);
 
         view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreateCardDialogFragment.newInstance("today");
-            dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
+            var dialogFragment = CreatePendingDialogFragment.newInstance();
+            dialogFragment.show(getParentFragmentManager(), "CreatePendingDialogFragment");
         });
-
-
         return view.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         updateFragment();
     }
 
     private void updateFragment() {
-
-
 //        this.view.currentDate.setText(String.format("Today"));
 
         // Observe isGoalRepositoryEmpty and update the TextView
-        activityModel.getIsEmpty().observe(isEmpty -> {
-            if (isEmpty) {
-                this.view.emptyText.setText(R.string.empty_text);
+        activityModel.getPendingGoals().observe(goals -> {
+            if (goals == null || goals.size() == 0 ) {
+                this.view.emptyText.setText("No pending goal");
                 this.view.emptyText.setVisibility(View.VISIBLE);
             } else {
                 this.view.emptyText.setVisibility(View.GONE);
@@ -156,6 +144,5 @@ public class PendingFragment extends Fragment {
         super.onResume();
         updateFragment();
     }
-
 
 }

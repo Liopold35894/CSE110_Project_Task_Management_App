@@ -140,7 +140,7 @@ public class TomorrowFragment extends Fragment {
         this.view.currentDate.setText(String.format("Tomorrow %s", formattedDate));
 
         activityModel.getTomorrowGoals().observe(goals -> {
-            if (goals.size() == 0) {
+            if (goals == null || goals.size() == 0 ) {
                 this.view.emptyText.setText(R.string.empty_text_tomorrow);
                 this.view.emptyText.setVisibility(View.VISIBLE);
             } else {
