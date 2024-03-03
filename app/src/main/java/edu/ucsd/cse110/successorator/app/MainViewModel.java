@@ -2,17 +2,12 @@ package edu.ucsd.cse110.successorator.app;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -21,7 +16,6 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
-import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
@@ -81,7 +75,7 @@ public class MainViewModel extends ViewModel {
 
             var todayGoals = cards.stream()
                     .sorted(Comparator.comparingInt(Goal::sortOrder))
-                    .filter(goal -> isSameDay(goal.getDate(), this.date))
+                    .filter(goal -> !goal.getDate().after(this.date))
                     .collect(Collectors.toList());
 
             this.todayGoal.setValue(todayGoals);
@@ -124,9 +118,9 @@ public class MainViewModel extends ViewModel {
     public Subject<List<Goal>> getTomorrowGoals() {
         return tomorrowGoal;
     }
-    public void scheduleToClearFinishedGoals(Context context) {
+    public void scheduleToClearFinishedGoals(Context context, Date date) {
         Calendar currentTime = Calendar.getInstance();
-        currentTime.setTimeInMillis(System.currentTimeMillis());
+        currentTime.setTimeInMillis(date.getTime());
 
         SharedPreferences prefs = context.getSharedPreferences("successorator", Context.MODE_PRIVATE);
         long nextClear = prefs.getLong("nextClear", 0);

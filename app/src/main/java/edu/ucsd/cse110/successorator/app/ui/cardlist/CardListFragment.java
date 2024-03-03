@@ -42,8 +42,6 @@ public class CardListFragment extends Fragment {
     private FragmentCardListBinding view;
     private CardListAdapter adapter;
 
-    private MyMenuProvider menuProvider;
-
     private Date date;
 
     private boolean isMenuProviderAdded = false;
@@ -136,19 +134,9 @@ public class CardListFragment extends Fragment {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             calendar.add(Calendar.HOUR_OF_DAY, 24);
-            var currentDate = calendar.getTime();
-
-            var dateFormat = DateFormat.getDateInstance().format(currentDate);
-            this.view.currentDate.setText(dateFormat);
-            activityModel.removeFinishedGoals();
-            var cards = activityModel.getOrderedCards().getValue().stream().filter((goal -> !goal.isFinished())).collect(Collectors.toList());
-            adapter.clear();
-            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
-            adapter.notifyDataSetChanged();
+            this.date = calendar.getTime();
+            updateFragment();
         });
-
-
-
         return view.getRoot();
     }
 
@@ -156,10 +144,13 @@ public class CardListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        var calendar = Calendar.getInstance().getTime();
+        updateFragment();
+    }
+
+    private void updateFragment() {
 
         var dateFormat = new SimpleDateFormat("EEE M/dd", Locale.getDefault());
-        var formattedDate = dateFormat.format(calendar);
+        var formattedDate = dateFormat.format(date);
 
         this.view.currentDate.setText(String.format("Today %s", formattedDate));
 
@@ -172,13 +163,13 @@ public class CardListFragment extends Fragment {
                 this.view.emptyText.setVisibility(View.GONE);
             }
         });
-        activityModel.scheduleToClearFinishedGoals(requireContext());
+        activityModel.scheduleToClearFinishedGoals(requireContext(), date);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        activityModel.scheduleToClearFinishedGoals(requireContext());
+        updateFragment();
     }
 
 

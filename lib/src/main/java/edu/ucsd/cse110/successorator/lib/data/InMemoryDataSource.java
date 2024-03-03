@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.lib.data;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

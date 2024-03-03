@@ -94,31 +94,6 @@ public class SimpleGoalRepository implements GoalRepository {
         dataSource.putGoal(goal.withSortOrder(dataSource.getMinSortOrder() + insertIndex));
     }
 
-//    public List<Goal> getTomorrowsGoals() {
-//        // Get the current date
-//        Date today = new Date();
-//
-//        // Create a Calendar object and set it to tomorrow's date
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(today);
-//        calendar.add(Calendar.DATE, 1);
-//        Date tomorrow = calendar.getTime();
-//
-//        // Get all the goals from the data source
-//        List<Goal> allGoals = dataSource.getGoals();
-//
-//        // Filter the goals to get the ones that are due tomorrow
-//        List<Goal> tomorrowsGoals = allGoals.stream()
-//                .filter(goal -> {
-//                    if (goal.getDate().equals(tomorrow)) {
-//                        return true;
-//                    }
-//                    return false;
-//                })
-//                .collect(Collectors.toList());
-//        return tomorrowsGoals;
-//    }
-
     @Override
     public void removeFinishedGoals() {
         dataSource.removeFinishedGoals();
