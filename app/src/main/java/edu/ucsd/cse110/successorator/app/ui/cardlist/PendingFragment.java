@@ -8,50 +8,40 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
 import edu.ucsd.cse110.successorator.app.R;
-import edu.ucsd.cse110.successorator.app.databinding.FragmentCardListBinding;
+import edu.ucsd.cse110.successorator.app.databinding.FragmentPendingBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
-import edu.ucsd.cse110.successorator.lib.domain.Goal;
-import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-public class CardListFragment extends Fragment {
+public class PendingFragment extends Fragment {
     private MainViewModel activityModel;
-    private FragmentCardListBinding view;
+    private FragmentPendingBinding view;
     private CardListAdapter adapter;
 
     private Date date;
 
     private boolean isMenuProviderAdded = false;
 
-    public CardListFragment() {
+    public PendingFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance() {
-        Fragment fragment = new CardListFragment();
+        Fragment fragment = new PendingFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -73,7 +63,7 @@ public class CardListFragment extends Fragment {
                 public void onPrepareMenu(@NonNull Menu menu) {
                     MenuItem thisItem = menu.findItem(R.id.today);
                     if (thisItem != null) {
-                        thisItem.setVisible(false);
+                        thisItem.setVisible(true);
                     }
                     thisItem = menu.findItem(R.id.tomorrow);
                     if (thisItem != null) {
@@ -81,7 +71,7 @@ public class CardListFragment extends Fragment {
                     }
                     thisItem = menu.findItem(R.id.pending);
                     if (thisItem != null) {
-                        thisItem.setVisible(true);
+                        thisItem.setVisible(false);
                     }
                 }
 
@@ -123,7 +113,7 @@ public class CardListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.view = FragmentCardListBinding.inflate(inflater, container, false);
+        this.view = FragmentPendingBinding.inflate(inflater, container, false);
 
         // Set the adapter on the ListView
         view.cardList.setAdapter(adapter);
@@ -133,14 +123,7 @@ public class CardListFragment extends Fragment {
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
-        view.forward.setOnClickListener(v -> {
-            // Simulate the passing of 24 hours
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.HOUR_OF_DAY, 24);
-            this.date = calendar.getTime();
-            updateFragment();
-        });
+
         return view.getRoot();
     }
 
@@ -153,10 +136,8 @@ public class CardListFragment extends Fragment {
 
     private void updateFragment() {
 
-        var dateFormat = new SimpleDateFormat("EEE M/dd", Locale.getDefault());
-        var formattedDate = dateFormat.format(date);
 
-        this.view.currentDate.setText(String.format("Today %s", formattedDate));
+//        this.view.currentDate.setText(String.format("Today"));
 
         // Observe isGoalRepositoryEmpty and update the TextView
         activityModel.getIsEmpty().observe(isEmpty -> {

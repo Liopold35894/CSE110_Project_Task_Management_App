@@ -80,6 +80,11 @@ public class TomorrowFragment extends Fragment {
                     thisItem.setVisible(true);
                 }
 
+                thisItem = menu.findItem(R.id.pending);
+                if (thisItem != null) {
+                    thisItem.setVisible(true);
+                }
+
             }
 
             @Override

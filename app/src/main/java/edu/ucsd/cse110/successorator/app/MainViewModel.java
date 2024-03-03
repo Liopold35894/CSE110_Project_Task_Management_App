@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.ucsd.cse110.successorator.app.util.MutableLiveDataSubjectAdapter;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
@@ -32,6 +33,7 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<List<Goal>> todayGoal;
 
     private final MutableSubject<List<Goal>> tomorrowGoal;
+    private final MutableSubject<List<Goal>> pendingGoals;
 
 
     private Date date;
@@ -57,6 +59,7 @@ public class MainViewModel extends ViewModel {
         this.displayedText = new SimpleSubject<>();
         this.todayGoal = new SimpleSubject<>();
         this.tomorrowGoal = new SimpleSubject<>();
+        this.pendingGoals = new SimpleSubject<>();
 
 
         // When the list of cards changes (or is first loaded), reset the ordering.
@@ -74,17 +77,26 @@ public class MainViewModel extends ViewModel {
             orderedCards.setValue(newOrderedCards);
 
             var todayGoals = cards.stream()
+                    .filter(goal -> goal.getDate() != null)
                     .sorted(Comparator.comparingInt(Goal::sortOrder))
                     .filter(goal -> !goal.getDate().after(this.date))
                     .collect(Collectors.toList());
 
-            this.todayGoal.setValue(todayGoals);
+            this.pendingGoals.setValue(todayGoals);
+
+            var pending = cards.stream()
+                    .filter(goal -> goal.getDate() == null)
+                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .collect(Collectors.toList());
+
+            this.pendingGoals.setValue(pending);
 
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, 1);
             Date tomorrowDate = calendar.getTime();
 
             var tomorrowGoals = cards.stream()
+                    .filter(goal -> goal.getDate() != null)
                     .sorted(Comparator.comparingInt(Goal::sortOrder))
                     .filter(goal -> isSameDay(goal.getDate(), tomorrowDate))
                     .collect(Collectors.toList());

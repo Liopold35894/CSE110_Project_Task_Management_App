@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import edu.ucsd.cse110.successorator.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.CardListFragment;
+import edu.ucsd.cse110.successorator.app.ui.cardlist.PendingFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.TomorrowFragment;
 
 
@@ -46,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (itemId == R.id.today) {
             swapFragments(CardListFragment.newInstance());
+        }
+
+        if (itemId == R.id.pending) {
+            swapFragments(PendingFragment.newInstance());
         }
 
         return super.onOptionsItemSelected(item);
