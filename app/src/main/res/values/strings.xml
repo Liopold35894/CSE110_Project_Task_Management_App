@@ -8,6 +8,7 @@
     <string name="swap_views">Swap Views</string>
     <string name="empty_text">No goals for the Day. Click the + at the upper right to enter your Most Important Thing.</string>
     <string name="_456">456</string>
+    <string name="no_recurrent_goal">no recurrent goal</string>
     <string name="todo">TODO</string>
     <string name="todo2">TODO</string>
     <string name="card_front_text"> <strike>Card Front Text</strike></string>
