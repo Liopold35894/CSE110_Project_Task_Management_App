@@ -29,19 +29,19 @@ import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFrag
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreatePendingDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragment;
 
-public class PendingFragment extends Fragment {
+public class RecurrentFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentPendingBinding view;
     private PendingListAdapter adapter;
     private Date date;
     private boolean isMenuProviderAdded = false;
 
-    public PendingFragment() {
+    public RecurrentFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance() {
-        Fragment fragment = new PendingFragment();
+        Fragment fragment = new RecurrentFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -61,23 +61,26 @@ public class PendingFragment extends Fragment {
 
                 @Override
                 public void onPrepareMenu(@NonNull Menu menu) {
-                    MenuItem thisItem = menu.findItem(R.id.today);
-                    if (thisItem != null) {
-                        thisItem.setVisible(true);
-                    }
-                    thisItem = menu.findItem(R.id.tomorrow);
-                    if (thisItem != null) {
-                        thisItem.setVisible(true);
-                    }
-                    thisItem = menu.findItem(R.id.pending);
+                    MenuItem thisItem = menu.findItem(R.id.recurrent);
                     if (thisItem != null) {
                         thisItem.setVisible(false);
                     }
 
-                    thisItem = menu.findItem(R.id.recurrent);
+                    thisItem = menu.findItem(R.id.today);
                     if (thisItem != null) {
                         thisItem.setVisible(true);
                     }
+
+                    thisItem = menu.findItem(R.id.tomorrow);
+                    if (thisItem != null) {
+                        thisItem.setVisible(true);
+                    }
+
+                    thisItem = menu.findItem(R.id.pending);
+                    if (thisItem != null) {
+                        thisItem.setVisible(true);
+                    }
+
                 }
 
                 @Override
@@ -108,46 +111,46 @@ public class PendingFragment extends Fragment {
         });
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.view = FragmentPendingBinding.inflate(inflater, container, false);
+//    @Nullable
+//    @Override
+//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        this.view = FragmentPendingBinding.inflate(inflater, container, false);
+//
+//        // Set the adapter on the ListView
+//        view.cardList.setAdapter(adapter);
+//
+//        view.createCardButton.setOnClickListener(v -> {
+//            var dialogFragment = CreatePendingDialogFragment.newInstance();
+//            dialogFragment.show(getParentFragmentManager(), "CreatePendingDialogFragment");
+//        });
+//        return view.getRoot();
+//    }
 
-        // Set the adapter on the ListView
-        view.cardList.setAdapter(adapter);
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        updateFragment();
+//    }
 
-        view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreatePendingDialogFragment.newInstance();
-            dialogFragment.show(getParentFragmentManager(), "CreatePendingDialogFragment");
-        });
-        return view.getRoot();
-    }
+//    private void updateFragment() {
+////        this.view.currentDate.setText(String.format("Today"));
+//
+//        // Observe isGoalRepositoryEmpty and update the TextView
+//        activityModel.getPendingGoals().observe(goals -> {
+//            if (goals == null || goals.size() == 0 ) {
+//                this.view.emptyText.setText("No Recurrent goal");
+//                this.view.emptyText.setVisibility(View.VISIBLE);
+//            } else {
+//                this.view.emptyText.setVisibility(View.GONE);
+//            }
+//        });
+//        activityModel.scheduleToClearFinishedGoals(requireContext(), date);
+//    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        updateFragment();
-    }
-
-    private void updateFragment() {
-//        this.view.currentDate.setText(String.format("Today"));
-
-        // Observe isGoalRepositoryEmpty and update the TextView
-        activityModel.getPendingGoals().observe(goals -> {
-            if (goals == null || goals.size() == 0 ) {
-                this.view.emptyText.setText("No pending goal");
-                this.view.emptyText.setVisibility(View.VISIBLE);
-            } else {
-                this.view.emptyText.setVisibility(View.GONE);
-            }
-        });
-        activityModel.scheduleToClearFinishedGoals(requireContext(), date);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateFragment();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        updateFragment();
+//    }
 
 }

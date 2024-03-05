@@ -83,6 +83,10 @@ public class CardListFragment extends Fragment {
                     if (thisItem != null) {
                         thisItem.setVisible(true);
                     }
+                    thisItem = menu.findItem(R.id.recurrent);
+                    if (thisItem != null) {
+                        thisItem.setVisible(true);
+                    }
                 }
 
 

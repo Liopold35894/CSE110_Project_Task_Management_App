@@ -14,6 +14,8 @@ import edu.ucsd.cse110.successorator.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.CardListFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.PendingFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.TomorrowFragment;
+import edu.ucsd.cse110.successorator.app.ui.cardlist.RecurrentFragment;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (itemId == R.id.pending) {
             swapFragments(PendingFragment.newInstance());
+        }
+
+        if (itemId == R.id.recurrent) {
+            swapFragments(RecurrentFragment.newInstance());
         }
 
         return super.onOptionsItemSelected(item);
