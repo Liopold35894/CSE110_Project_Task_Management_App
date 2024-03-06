@@ -76,7 +76,7 @@ public class MoveGoalDialogFragment extends DialogFragment {
         tomorrow.add(Calendar.DAY_OF_YEAR,1);
 
         builder.setTitle("Choose an action")
-                .setItems(new CharSequence[]{"Move to Today", "Move to Tomorrow", "Delete"}, (dialog, which) -> {
+                .setItems(new CharSequence[]{"Move to Today", "Move to Tomorrow","Finish", "Delete"}, (dialog, which) -> {
                     switch (which) {
                         case 0:
                             activityModel.addBehindUnfinishedAndInFrontOfFinished(new Goal(0,goal.getName(),false,-1,today.getTime(), Goal.RepeatInterval.ONE_TIME));
@@ -88,6 +88,9 @@ public class MoveGoalDialogFragment extends DialogFragment {
                             activityModel.remove(goalId);
                             break;
                         case 2:
+                            activityModel.addBehindUnfinishedAndInFrontOfFinished(new Goal(0, goal.getName(), true, -1,today.getTime(), Goal.RepeatInterval.ONE_TIME));
+                            activityModel.remove(goalId);
+                        case 3:
                             activityModel.remove(goalId);
                             break;
                     }
