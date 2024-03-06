@@ -97,7 +97,7 @@ public class MainViewModel extends ViewModel {
             this.pendingGoals.setValue(todayGoals);
 
             var recurrent = cards.stream()
-                    .filter(goal -> goal.getDate() == null)
+                    .filter(goal -> goal.getRepeatInterval() != Goal.RepeatInterval.ONE_TIME)
                     .sorted(Comparator.comparingInt(Goal::sortOrder))
                     .collect(Collectors.toList());
 

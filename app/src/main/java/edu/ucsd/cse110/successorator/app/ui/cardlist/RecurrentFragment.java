@@ -136,7 +136,7 @@ public class RecurrentFragment extends Fragment {
 //        this.view.currentDate.setText(String.format("Today"));
 
         // Observe isGoalRepositoryEmpty and update the TextView
-        activityModel.getPendingGoals().observe(goals -> {
+        activityModel.getRecurrentGoals().observe(goals -> {
             if (goals == null || goals.size() == 0 ) {
                 this.view.emptyText.setText("No Recurrent goal");
                 this.view.emptyText.setVisibility(View.VISIBLE);
