@@ -23,7 +23,7 @@ import java.util.Locale;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
 import edu.ucsd.cse110.successorator.app.R;
-import edu.ucsd.cse110.successorator.app.databinding.FragmentPendingBinding;
+import edu.ucsd.cse110.successorator.app.databinding.FragmentRecurrentBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreatePendingDialogFragment;
@@ -31,7 +31,7 @@ import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragme
 
 public class RecurrentFragment extends Fragment {
     private MainViewModel activityModel;
-    private FragmentPendingBinding view;
+    private FragmentRecurrentBinding view;
     private PendingListAdapter adapter;
     private Date date;
     private boolean isMenuProviderAdded = false;
@@ -103,7 +103,7 @@ public class RecurrentFragment extends Fragment {
             var dialogFragment = MoveGoalDialogFragment.newInstance(id);
             dialogFragment.show(getParentFragmentManager(), "MoveGoalDialogFragment");
         });
-        activityModel.getPendingGoals().observe(cards -> {
+        activityModel.getRecurrentGoals().observe(cards -> {
             if (cards == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
@@ -111,46 +111,46 @@ public class RecurrentFragment extends Fragment {
         });
     }
 
-//    @Nullable
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        this.view = FragmentPendingBinding.inflate(inflater, container, false);
-//
-//        // Set the adapter on the ListView
-//        view.cardList.setAdapter(adapter);
-//
-//        view.createCardButton.setOnClickListener(v -> {
-//            var dialogFragment = CreatePendingDialogFragment.newInstance();
-//            dialogFragment.show(getParentFragmentManager(), "CreatePendingDialogFragment");
-//        });
-//        return view.getRoot();
-//    }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        this.view = FragmentRecurrentBinding.inflate(inflater, container, false);
 
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        updateFragment();
-//    }
+        // Set the adapter on the ListView
+        view.cardList.setAdapter(adapter);
 
-//    private void updateFragment() {
-////        this.view.currentDate.setText(String.format("Today"));
-//
-//        // Observe isGoalRepositoryEmpty and update the TextView
-//        activityModel.getPendingGoals().observe(goals -> {
-//            if (goals == null || goals.size() == 0 ) {
-//                this.view.emptyText.setText("No Recurrent goal");
-//                this.view.emptyText.setVisibility(View.VISIBLE);
-//            } else {
-//                this.view.emptyText.setVisibility(View.GONE);
-//            }
-//        });
-//        activityModel.scheduleToClearFinishedGoals(requireContext(), date);
-//    }
+        view.createCardButton.setOnClickListener(v -> {
+            var dialogFragment = CreatePendingDialogFragment.newInstance();
+            dialogFragment.show(getParentFragmentManager(), "CreatePendingDialogFragment");
+        });
+        return view.getRoot();
+    }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        updateFragment();
-//    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        updateFragment();
+    }
+
+    private void updateFragment() {
+//        this.view.currentDate.setText(String.format("Today"));
+
+        // Observe isGoalRepositoryEmpty and update the TextView
+        activityModel.getPendingGoals().observe(goals -> {
+            if (goals == null || goals.size() == 0 ) {
+                this.view.emptyText.setText("No Recurrent goal");
+                this.view.emptyText.setVisibility(View.VISIBLE);
+            } else {
+                this.view.emptyText.setVisibility(View.GONE);
+            }
+        });
+        activityModel.scheduleToClearFinishedGoals(requireContext(), date);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateFragment();
+    }
 
 }
