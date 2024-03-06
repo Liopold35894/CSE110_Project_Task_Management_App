@@ -35,6 +35,8 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<List<Goal>> tomorrowGoal;
     private final MutableSubject<List<Goal>> pendingGoals;
 
+    private final MutableSubject<List<Goal>> recurrentGoals;
+
 
     private final Date date;
 
@@ -60,6 +62,7 @@ public class MainViewModel extends ViewModel {
         this.todayGoal = new SimpleSubject<>();
         this.tomorrowGoal = new SimpleSubject<>();
         this.pendingGoals = new SimpleSubject<>();
+        this.recurrentGoals = new SimpleSubject<>();
 
 
         // When the list of cards changes (or is first loaded), reset the ordering.
@@ -90,6 +93,15 @@ public class MainViewModel extends ViewModel {
                     .collect(Collectors.toList());
 
             this.pendingGoals.setValue(pending);
+
+            this.pendingGoals.setValue(todayGoals);
+
+            var recurrent = cards.stream()
+                    .filter(goal -> goal.getRepeatInterval() != Goal.RepeatInterval.ONE_TIME)
+                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .collect(Collectors.toList());
+
+            this.recurrentGoals.setValue(recurrent);
 
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -133,6 +145,10 @@ public class MainViewModel extends ViewModel {
 
     public Subject<List<Goal>> getPendingGoals() {
         return pendingGoals;
+    }
+
+    public Subject<List<Goal>> getRecurrentGoals() {
+        return recurrentGoals;
     }
     public void scheduleToClearFinishedGoals(Context context, Date date) {
         Calendar currentTime = Calendar.getInstance();

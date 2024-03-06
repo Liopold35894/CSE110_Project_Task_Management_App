@@ -73,6 +73,11 @@ public class PendingFragment extends Fragment {
                     if (thisItem != null) {
                         thisItem.setVisible(false);
                     }
+
+                    thisItem = menu.findItem(R.id.recurrent);
+                    if (thisItem != null) {
+                        thisItem.setVisible(true);
+                    }
                 }
 
                 @Override
