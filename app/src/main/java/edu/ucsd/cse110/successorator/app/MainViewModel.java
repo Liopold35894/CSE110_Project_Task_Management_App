@@ -188,6 +188,7 @@ public class MainViewModel extends ViewModel {
     }
 
 
+
     public void toggleCompleted(Goal goal) {
         //if goal is unfinished we do this
         if (!goal.isFinished()) {
@@ -215,6 +216,15 @@ public class MainViewModel extends ViewModel {
         cal2.setTime(date2);
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+    }
+
+    private boolean isTomorrow(Date date) {
+        Calendar today = Calendar.getInstance();
+        Calendar target = Calendar.getInstance();
+        target.setTime(date);
+        today.add(Calendar.DAY_OF_YEAR, 1);
+        return (today.get(Calendar.YEAR) == target.get(Calendar.YEAR)) &&
+                (today.get(Calendar.DAY_OF_YEAR) == target.get(Calendar.DAY_OF_YEAR));
     }
 
     public Subject<String> getDisplayedText() {
