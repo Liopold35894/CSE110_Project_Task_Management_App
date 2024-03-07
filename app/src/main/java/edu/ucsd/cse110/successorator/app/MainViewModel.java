@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -249,5 +250,21 @@ public class MainViewModel extends ViewModel {
 
     public void removeFinishedGoals() {
         goalRepository.removeFinishedGoals();
+    }
+
+    //add recurring goals
+    public void addRecurringGoals(Goal goal){
+        addBehindUnfinishedAndInFrontOfFinished(goal);
+
+        // If the goal is not ONE_TIME, add it to the recurrent goals list
+        if (goal.getRepeatInterval() != Goal.RepeatInterval.ONE_TIME) {
+            List<Goal> recurrent = recurrentGoals.getValue();
+            if (recurrent == null) {
+                recurrent = new ArrayList<>();
+            }
+            recurrent.add(goal);
+            recurrentGoals.setValue(recurrent);
+        }
+
     }
 }

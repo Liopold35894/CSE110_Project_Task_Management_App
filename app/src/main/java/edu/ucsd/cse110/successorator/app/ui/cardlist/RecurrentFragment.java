@@ -32,7 +32,7 @@ import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragme
 public class RecurrentFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentRecurrentBinding view;
-    private PendingListAdapter adapter;
+    private CardListAdapter adapter;
     private Date date;
     private boolean isMenuProviderAdded = false;
 
@@ -99,14 +99,13 @@ public class RecurrentFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new PendingListAdapter(requireContext(), List.of(), id -> {
-            var dialogFragment = MoveGoalDialogFragment.newInstance(id);
-            dialogFragment.show(getParentFragmentManager(), "MoveGoalDialogFragment");
-        });
-        activityModel.getRecurrentGoals().observe(cards -> {
-            if (cards == null) return;
+        this.adapter = new CardListAdapter(requireContext(), List.of(), date, id -> {
+            var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
+            dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
+        }, activityModel::toggleCompleted);
+        activityModel.getRecurrentGoals().observe(recurrentGoals -> {
             adapter.clear();
-            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
+            adapter.addAll(new ArrayList<>(recurrentGoals)); // Ensure you're working with a mutable copy
             adapter.notifyDataSetChanged();
         });
     }

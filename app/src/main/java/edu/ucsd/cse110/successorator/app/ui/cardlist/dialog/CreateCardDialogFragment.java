@@ -71,14 +71,65 @@ public class CreateCardDialogFragment extends DialogFragment {
             return;
         }
         if ("today".equals(fragmentType)) {
-            var card = new Goal(0, front, false, -1, date, Goal.RepeatInterval.ONE_TIME);
-            activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
+            //add onetime
+            if(view.oneTimeButton.isChecked()){
+                var card = new Goal(0, front, false, -1, date, Goal.RepeatInterval.ONE_TIME);
+                activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
+            }
+            //add daily
+            else if(view.dailyButton.isChecked()){
+                var card = new Goal(0, front, false, -1, date, Goal.RepeatInterval.DAILY);
+                activityModel.addRecurringGoals(card);
+            }
+            //add weekly
+            else if(view.weeklyButton.isChecked()){
+                var card = new Goal(0, front, false, -1, date, Goal.RepeatInterval.WEEKLY);
+                activityModel.addRecurringGoals(card);
+            }
+            //add monthly
+            else if(view.monthlyButton.isChecked()){
+                var card = new Goal(0, front, false, -1, date, Goal.RepeatInterval.MONTHLY);
+                activityModel.addRecurringGoals(card);
+            }
+            //add yearly
+            else if(view.yearlyButton.isChecked()){
+                var card = new Goal(0, front, false, -1, date, Goal.RepeatInterval.YEARLY);
+                activityModel.addRecurringGoals(card);
+            }
+
+
+
+
         } else if ("tomorrow".equals(fragmentType)) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, 1);
-            var card = new Goal(0, front, false, -1, calendar.getTime(), Goal.RepeatInterval.ONE_TIME);
-            activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
-        }
+
+            if(view.oneTimeButton.isChecked()){
+                var card = new Goal(0, front, false, -1, calendar.getTime(), Goal.RepeatInterval.ONE_TIME);
+                activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
+            }
+            //add daily
+            if(view.dailyButton.isChecked()){
+                var card = new Goal(0, front, false, -1, calendar.getTime(), Goal.RepeatInterval.DAILY);
+                activityModel.addRecurringGoals(card);
+            }
+            //add weekly
+            else if(view.weeklyButton.isChecked()){
+                var card = new Goal(0, front, false, -1, calendar.getTime(), Goal.RepeatInterval.WEEKLY);
+                activityModel.addRecurringGoals(card);
+            }
+            //add monthly
+            else if(view.monthlyButton.isChecked()){
+                var card = new Goal(0, front, false, -1, calendar.getTime(), Goal.RepeatInterval.MONTHLY);
+                activityModel.addRecurringGoals(card);
+            }
+            //add yearly
+            else if(view.yearlyButton.isChecked()){
+                var card = new Goal(0, front, false, -1, calendar.getTime(), Goal.RepeatInterval.YEARLY);
+                activityModel.addRecurringGoals(card);
+                }
+            }
+
 
         dialog.dismiss();
 
