@@ -27,6 +27,7 @@ import edu.ucsd.cse110.successorator.app.databinding.FragmentRecurrentBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreatePendingDialogFragment;
+import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateRecurringDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragment;
 
 public class RecurrentFragment extends Fragment {
@@ -119,8 +120,8 @@ public class RecurrentFragment extends Fragment {
         view.cardList.setAdapter(adapter);
 
         view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreatePendingDialogFragment.newInstance();
-            dialogFragment.show(getParentFragmentManager(), "CreatePendingDialogFragment");
+            var dialogFragment = CreateRecurringDialogFragment.newInstance();
+            dialogFragment.show(getParentFragmentManager(), "CreateRecurringDialogFragment");
         });
         return view.getRoot();
     }
