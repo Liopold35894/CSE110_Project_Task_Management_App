@@ -27,7 +27,7 @@
             android:layout_height="46dp"
             android:layout_marginTop="16dp"
             android:background="#FFFFFF"
-            android:src="@drawable/ic_swap"
+            android:src="@drawable/calendar_add"
             app:layout_constraintEnd_toStartOf="@+id/createCardButton"
             app:layout_constraintTop_toTopOf="parent" />
 
