@@ -91,7 +91,7 @@ public class CreateRecurringDialogFragment extends DialogFragment {
 
         if (!goalName.isEmpty()) {
             Goal newGoal = new Goal(0, goalName, false, -1, selectedDate.getTime(), repeatInterval);
-            activityModel.addRecurringGoals(newGoal);
+            activityModel.addBehindUnfinishedAndInFrontOfFinished(newGoal);
         }
     }
 

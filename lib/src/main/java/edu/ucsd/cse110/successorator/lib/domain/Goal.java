@@ -75,7 +75,7 @@ public class Goal implements Serializable {
         return date;
     }
 
-    @Nullable
+    @NonNull
     public RepeatInterval getRepeatInterval() {
         return repeatInterval;
     }

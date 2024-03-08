@@ -71,6 +71,6 @@ public class RoomGoalRepository implements GoalRepository {
 
     @Override
     public void removeFinishedGoals() {
-        goalDao.deleteFinishedGoals();
+        goalDao.deleteFinishedGoals(Goal.RepeatInterval.ONE_TIME);;
     }
 }

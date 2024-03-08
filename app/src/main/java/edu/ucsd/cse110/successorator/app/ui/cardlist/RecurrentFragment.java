@@ -29,6 +29,7 @@ import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFrag
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreatePendingDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateRecurringDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragment;
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 public class RecurrentFragment extends Fragment {
     private MainViewModel activityModel;
@@ -133,7 +134,6 @@ public class RecurrentFragment extends Fragment {
     }
 
     private void updateFragment() {
-//        this.view.currentDate.setText(String.format("Today"));
 
         // Observe isGoalRepositoryEmpty and update the TextView
         activityModel.getRecurrentGoals().observe(goals -> {
@@ -150,7 +150,6 @@ public class RecurrentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateFragment();
     }
 
 }
