@@ -198,6 +198,7 @@ public class InMemoryDataSource {
     public void removeFinishedGoals() {
         var finishedGoals = goals.values().stream()
                 .filter(Goal::isFinished)
+                .filter(goal -> goal.getRepeatInterval() == Goal.RepeatInterval.ONE_TIME)
                 .collect(Collectors.toList());
 
         for (Goal goal : finishedGoals) {

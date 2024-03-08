@@ -99,4 +99,48 @@ public class SimpleGoalRepository implements GoalRepository {
         dataSource.removeFinishedGoals();
     }
 
+    public void addRecurringGoals() {
+        // Get the current date
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = calendar.getTime();
+
+        // Get all the goals from the data source
+        List<Goal> allGoals = dataSource.getGoals();
+
+        // Filter for recurring goals
+        List<Goal> recurringGoals = allGoals.stream()
+                .filter(goal -> goal.getRepeatInterval() != Goal.RepeatInterval.ONE_TIME)
+                .collect(Collectors.toList());
+
+        // For each recurring goal
+        for (Goal goal : recurringGoals) {
+            // Calculate the next occurrence date based on the repeat interval
+            assert goal.getDate() != null;
+            var oldId = goal.getId();
+            calendar.setTime(goal.getDate());
+            switch (goal.getRepeatInterval()) {
+                case DAILY:
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                    break;
+                case WEEKLY:
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                    break;
+                case MONTHLY:
+                    calendar.add(Calendar.MONTH, 1);
+                    break;
+                case YEARLY:
+                    calendar.add(Calendar.YEAR, 1);
+                    break;
+            }
+            Date nextDate = calendar.getTime();
+
+            // If the next occurrence is today or in the future, add a new goal to the repository
+            if (goal.getDate().before(currentDate)) {
+                Goal newGoal = new Goal(goal.getId(), goal.getName(), false, goal.sortOrder(), nextDate, goal.getRepeatInterval());
+                save(newGoal);
+                remove(oldId);
+            }
+        }
+    }
+
 }

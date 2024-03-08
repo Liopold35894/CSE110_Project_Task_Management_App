@@ -10,6 +10,8 @@ import java.util.stream.IntStream;
 
 import java.util.List;
 
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
+
 @Dao
 public interface GoalDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -91,6 +93,8 @@ public interface GoalDao {
     @Query("DELETE FROM goals WHERE id = :id")
     void delete(int id);
 
-    @Query("DELETE FROM goals WHERE isFinished = 1")
-    void deleteFinishedGoals();
+    @Query("DELETE FROM goals WHERE isFinished = 1 AND repeat_interval = :oneTime")
+    void deleteFinishedGoals(Goal.RepeatInterval oneTime);
+
+
 }

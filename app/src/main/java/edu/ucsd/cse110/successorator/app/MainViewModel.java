@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -18,6 +19,7 @@ import edu.ucsd.cse110.successorator.app.util.MutableLiveDataSubjectAdapter;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
+import edu.ucsd.cse110.successorator.lib.util.Observer;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
@@ -157,12 +159,16 @@ public class MainViewModel extends ViewModel {
         Calendar nextClearTime = Calendar.getInstance();
 
         if (nextClear > 0) {
-
             nextClearTime.setTimeInMillis(nextClear);
-
-            if (currentTime.after(nextClearTime)) {
-                goalRepository.removeFinishedGoals();
-            }
+            getRecurrentGoals().observe(new Observer<List<Goal>>() {
+                @Override
+                public void onChanged(List<Goal> goals) {
+                    addRecurringGoals();
+                    if (currentTime.after(nextClearTime)) {
+                        goalRepository.removeFinishedGoals();
+                    }
+                }
+            });
         }
         nextClearTime.setTimeInMillis(System.currentTimeMillis());
         nextClearTime.set(Calendar.HOUR_OF_DAY, 2);
@@ -176,15 +182,53 @@ public class MainViewModel extends ViewModel {
         editor.putLong("nextClear", nextClearTime.getTimeInMillis());
         editor.apply();
     }
-    public Subject<Boolean> getIsEmpty() {
 
-        if (Boolean.TRUE.equals(isEmpty.getValue())) {
-            return isEmpty;
-        } else {
-            isEmpty.setValue(false);
-            return isEmpty;
+    public void addRecurringGoals() {
+
+        var recurrent = getRecurrentGoals();
+
+        if (recurrent.getValue() == null) {
+            return;
+        }
+        for (Goal goal : recurrent.getValue()) {
+            if (!goal.isFinished) {
+                continue;
+            }
+
+            var oldId = goal.getId();
+            Date goalDate = goal.getDate();
+            Calendar yesterday = Calendar.getInstance();
+            yesterday.add(Calendar.DAY_OF_YEAR,-1);
+            Date today = yesterday.getTime();
+
+            if (goalDate.before(today)){
+                Date nextDate = goalDate;
+                while (nextDate.before(today)) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(nextDate);
+                    switch (goal.getRepeatInterval()) {
+                        case DAILY:
+                            calendar.add(Calendar.DAY_OF_YEAR, 1);
+                            break;
+                        case WEEKLY:
+                            calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                            break;
+                        case MONTHLY:
+                            calendar.add(Calendar.MONTH, 1);
+                            break;
+                        case YEARLY:
+                            calendar.add(Calendar.YEAR, 1);
+                            break;
+                    }
+                    nextDate = calendar.getTime();
+                }
+                Goal newGoal = new Goal(0, goal.getName(), false, goal.sortOrder(), nextDate, goal.getRepeatInterval());
+                goalRepository.addGoalBetweenFinishedAndUnfinished(newGoal);
+                goalRepository.remove(oldId);
+            }
         }
     }
+
 
 
     public void toggleCompleted(Goal goal) {
@@ -214,6 +258,15 @@ public class MainViewModel extends ViewModel {
         cal2.setTime(date2);
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+    }
+
+    private boolean isTomorrow(Date date) {
+        Calendar today = Calendar.getInstance();
+        Calendar target = Calendar.getInstance();
+        target.setTime(date);
+        today.add(Calendar.DAY_OF_YEAR, 1);
+        return (today.get(Calendar.YEAR) == target.get(Calendar.YEAR)) &&
+                (today.get(Calendar.DAY_OF_YEAR) == target.get(Calendar.DAY_OF_YEAR));
     }
 
     public Subject<String> getDisplayedText() {
@@ -250,4 +303,5 @@ public class MainViewModel extends ViewModel {
     public void removeFinishedGoals() {
         goalRepository.removeFinishedGoals();
     }
+
 }

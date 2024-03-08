@@ -70,15 +70,29 @@ public class CreateCardDialogFragment extends DialogFragment {
         if (front.isEmpty()) {
             return;
         }
-        if ("today".equals(fragmentType)) {
-            var card = new Goal(0, front, false, -1, date, Goal.RepeatInterval.ONE_TIME);
-            activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
-        } else if ("tomorrow".equals(fragmentType)) {
+        var repeatInterval = Goal.RepeatInterval.ONE_TIME;
+        if ("tomorrow".equals(fragmentType)) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, 1);
-            var card = new Goal(0, front, false, -1, calendar.getTime(), Goal.RepeatInterval.ONE_TIME);
-            activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
+            date = calendar.getTime();
         }
+        if(view.oneTimeButton.isChecked()){
+            repeatInterval = Goal.RepeatInterval.ONE_TIME;
+        }
+        else if(view.dailyButton.isChecked()){
+            repeatInterval = Goal.RepeatInterval.DAILY;
+        }
+        else if(view.weeklyButton.isChecked()){
+            repeatInterval = Goal.RepeatInterval.WEEKLY;
+        }
+        else if(view.monthlyButton.isChecked()){
+            repeatInterval = Goal.RepeatInterval.MONTHLY;
+        }
+        else if(view.yearlyButton.isChecked()){
+            repeatInterval = Goal.RepeatInterval.YEARLY;
+        }
+        var card = new Goal(0, front, false, -1, date, repeatInterval);
+        activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
 
         dialog.dismiss();
 

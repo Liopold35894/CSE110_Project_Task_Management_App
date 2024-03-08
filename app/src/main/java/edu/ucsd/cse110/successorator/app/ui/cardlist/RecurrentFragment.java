@@ -27,12 +27,14 @@ import edu.ucsd.cse110.successorator.app.databinding.FragmentRecurrentBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreatePendingDialogFragment;
+import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateRecurringDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragment;
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 public class RecurrentFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentRecurrentBinding view;
-    private PendingListAdapter adapter;
+    private CardListAdapter adapter;
     private Date date;
     private boolean isMenuProviderAdded = false;
 
@@ -99,14 +101,13 @@ public class RecurrentFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new PendingListAdapter(requireContext(), List.of(), id -> {
-            var dialogFragment = MoveGoalDialogFragment.newInstance(id);
-            dialogFragment.show(getParentFragmentManager(), "MoveGoalDialogFragment");
-        });
-        activityModel.getRecurrentGoals().observe(cards -> {
-            if (cards == null) return;
+        this.adapter = new CardListAdapter(requireContext(), List.of(), date, id -> {
+            var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
+            dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
+        }, activityModel::toggleCompleted);
+        activityModel.getRecurrentGoals().observe(recurrentGoals -> {
             adapter.clear();
-            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
+            adapter.addAll(new ArrayList<>(recurrentGoals)); // Ensure you're working with a mutable copy
             adapter.notifyDataSetChanged();
         });
     }
@@ -120,8 +121,8 @@ public class RecurrentFragment extends Fragment {
         view.cardList.setAdapter(adapter);
 
         view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreatePendingDialogFragment.newInstance();
-            dialogFragment.show(getParentFragmentManager(), "CreatePendingDialogFragment");
+            var dialogFragment = CreateRecurringDialogFragment.newInstance();
+            dialogFragment.show(getParentFragmentManager(), "CreateRecurringDialogFragment");
         });
         return view.getRoot();
     }
@@ -133,7 +134,6 @@ public class RecurrentFragment extends Fragment {
     }
 
     private void updateFragment() {
-//        this.view.currentDate.setText(String.format("Today"));
 
         // Observe isGoalRepositoryEmpty and update the TextView
         activityModel.getRecurrentGoals().observe(goals -> {
@@ -150,7 +150,6 @@ public class RecurrentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateFragment();
     }
 
 }
