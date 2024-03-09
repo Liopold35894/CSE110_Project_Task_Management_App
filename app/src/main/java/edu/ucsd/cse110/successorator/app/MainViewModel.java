@@ -39,9 +39,7 @@ public class MainViewModel extends ViewModel {
 
     private final MutableSubject<List<Goal>> recurrentGoals;
 
-
     private final Date date;
-
 
     public static final ViewModelInitializer<MainViewModel> initializer =
         new ViewModelInitializer<>(
