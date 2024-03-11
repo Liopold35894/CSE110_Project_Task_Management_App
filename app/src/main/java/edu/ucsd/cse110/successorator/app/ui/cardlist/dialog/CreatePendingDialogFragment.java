@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,16 +66,21 @@ public class CreatePendingDialogFragment extends DialogFragment {
     }
 
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
-        //add card if it is name is not empty
-        Date date = new Date();
-        var front = view.cardFrontEditText.getText().toString();
-        if (front.isEmpty()) {
-            return;
+        if (selectedCategory == Goal.Category.NONE) {
+            Toast.makeText(getActivity(), "Please select a category", Toast.LENGTH_LONG).show();
+        } else {
+            //add card if it is name is not empty
+            Date date = new Date();
+            var front = view.cardFrontEditText.getText().toString();
+            if (front.isEmpty()) {
+                return;
+            }
+
+            var card = new Goal(0, front, false, -1, null, Goal.RepeatInterval.ONE_TIME, selectedCategory);
+            activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
+            dialog.dismiss();
         }
 
-        var card = new Goal(0, front, false, -1, null, Goal.RepeatInterval.ONE_TIME, selectedCategory);
-        activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
-        dialog.dismiss();
     }
 
     private void onNegativeButtonClick(DialogInterface dialog, int which) {

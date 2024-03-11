@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,25 +83,29 @@ public class CreateRecurringDialogFragment extends DialogFragment {
     }
 
     private void onPositiveButtonClick(DialogInterface dialogInterface, int i) {
-        String goalName = binding.cardFrontEditText.getText().toString();
-        Goal.RepeatInterval repeatInterval = Goal.RepeatInterval.ONE_TIME; // default value
+        if (selectedCategory == Goal.Category.NONE) {
+            Toast.makeText(getActivity(), "Please select a category", Toast.LENGTH_LONG).show();
+        } else {
+            String goalName = binding.cardFrontEditText.getText().toString();
+            Goal.RepeatInterval repeatInterval = Goal.RepeatInterval.ONE_TIME; // default value
 
 
-       if (binding.dailyButton.isChecked()) {
-            repeatInterval = Goal.RepeatInterval.DAILY;
-        } else if (binding.weeklyButton.isChecked()) {
-            repeatInterval = Goal.RepeatInterval.WEEKLY;
-        } else if (binding.monthlyButton.isChecked()) {
-            repeatInterval = Goal.RepeatInterval.MONTHLY;
-        } else if (binding.yearlyButton.isChecked()) {
-            repeatInterval = Goal.RepeatInterval.YEARLY;
-        }
+            if (binding.dailyButton.isChecked()) {
+                repeatInterval = Goal.RepeatInterval.DAILY;
+            } else if (binding.weeklyButton.isChecked()) {
+                repeatInterval = Goal.RepeatInterval.WEEKLY;
+            } else if (binding.monthlyButton.isChecked()) {
+                repeatInterval = Goal.RepeatInterval.MONTHLY;
+            } else if (binding.yearlyButton.isChecked()) {
+                repeatInterval = Goal.RepeatInterval.YEARLY;
+            }
 
 
 
-        if (!goalName.isEmpty()) {
-            Goal newGoal = new Goal(0, goalName, false, -1, selectedDate.getTime(), repeatInterval, selectedCategory);
-            activityModel.addBehindUnfinishedAndInFrontOfFinished(newGoal);
+            if (!goalName.isEmpty()) {
+                Goal newGoal = new Goal(0, goalName, false, -1, selectedDate.getTime(), repeatInterval, selectedCategory);
+                activityModel.addBehindUnfinishedAndInFrontOfFinished(newGoal);
+            }
         }
     }
 

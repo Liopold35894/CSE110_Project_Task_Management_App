@@ -1,11 +1,13 @@
 package edu.ucsd.cse110.successorator.app.ui.cardlist.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Calendar;
 import java.util.Date;
 
+import edu.ucsd.cse110.successorator.app.MainActivity;
 import edu.ucsd.cse110.successorator.app.MainViewModel;
 import edu.ucsd.cse110.successorator.app.R;
 import edu.ucsd.cse110.successorator.app.databinding.FragmentDialogCreateCardBinding;
@@ -31,7 +34,6 @@ public class CreateCardDialogFragment extends DialogFragment {
     private String fragmentType;
 
     private Goal.Category selectedCategory = Goal.Category.NONE;
-
 
 
     CreateCardDialogFragment() {
@@ -75,38 +77,45 @@ public class CreateCardDialogFragment extends DialogFragment {
     }
 
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
-        //add card if it is name is not empty
-        Date date = new Date();
-        var front = view.cardFrontEditText.getText().toString();
-        if (front.isEmpty()) {
-            return;
-        }
-        var repeatInterval = Goal.RepeatInterval.ONE_TIME;
-        if ("tomorrow".equals(fragmentType)) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            date = calendar.getTime();
-        }
-        if(view.oneTimeButton.isChecked()){
-            repeatInterval = Goal.RepeatInterval.ONE_TIME;
-        }
-        else if(view.dailyButton.isChecked()){
-            repeatInterval = Goal.RepeatInterval.DAILY;
-        }
-        else if(view.weeklyButton.isChecked()){
-            repeatInterval = Goal.RepeatInterval.WEEKLY;
-        }
-        else if(view.monthlyButton.isChecked()){
-            repeatInterval = Goal.RepeatInterval.MONTHLY;
-        }
-        else if(view.yearlyButton.isChecked()){
-            repeatInterval = Goal.RepeatInterval.YEARLY;
-        }
 
-        var card = new Goal(0, front, false, -1, date, repeatInterval, selectedCategory);
-        activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
+        if (selectedCategory == Goal.Category.NONE) {
+            Toast.makeText(getActivity(), "Please select a category", Toast.LENGTH_LONG).show();
+        } else {
+            //add card if it is name is not empty
+            Date date = new Date();
+            var front = view.cardFrontEditText.getText().toString();
+            if (front.isEmpty()) {
+                return;
+            }
 
-        dialog.dismiss();
+            var repeatInterval = Goal.RepeatInterval.ONE_TIME;
+            if ("tomorrow".equals(fragmentType)) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
+                date = calendar.getTime();
+            }
+            if(view.oneTimeButton.isChecked()){
+                repeatInterval = Goal.RepeatInterval.ONE_TIME;
+            }
+            else if(view.dailyButton.isChecked()){
+                repeatInterval = Goal.RepeatInterval.DAILY;
+            }
+            else if(view.weeklyButton.isChecked()){
+                repeatInterval = Goal.RepeatInterval.WEEKLY;
+            }
+            else if(view.monthlyButton.isChecked()){
+                repeatInterval = Goal.RepeatInterval.MONTHLY;
+            }
+            else if(view.yearlyButton.isChecked()){
+                repeatInterval = Goal.RepeatInterval.YEARLY;
+            }
+
+            var card = new Goal(0, front, false, -1, date, repeatInterval, selectedCategory);
+
+            activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
+
+            dialog.dismiss();
+        }
 
     }
 
