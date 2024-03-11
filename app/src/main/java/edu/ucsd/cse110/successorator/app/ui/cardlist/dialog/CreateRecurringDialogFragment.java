@@ -13,12 +13,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
+import edu.ucsd.cse110.successorator.app.R;
 import edu.ucsd.cse110.successorator.app.databinding.FragmentDialogCreateRecurringBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
@@ -91,18 +94,9 @@ public class CreateRecurringDialogFragment extends DialogFragment {
         } else if (binding.yearlyButton.isChecked()) {
             repeatInterval = Goal.RepeatInterval.YEARLY;
         }
-        if(binding.WorkButton.isSelected()){
-            selectedCategory = Goal.Category.WORK;
-        }
-        else if(binding.HomeButton.isSelected()){
-            selectedCategory = Goal.Category.HOME;
-        }
-        else if(binding.SchoolButton.isSelected()){
-            selectedCategory = Goal.Category.SCHOOL;
-        }
-        else if(binding.ErrandsButton.isSelected()){
-            selectedCategory = Goal.Category.ERRANDS;
-        }
+
+
+
         if (!goalName.isEmpty()) {
             Goal newGoal = new Goal(0, goalName, false, -1, selectedDate.getTime(), repeatInterval, selectedCategory);
             activityModel.addBehindUnfinishedAndInFrontOfFinished(newGoal);
@@ -113,26 +107,19 @@ public class CreateRecurringDialogFragment extends DialogFragment {
         dialogInterface.cancel();
     }
 
-    private void selectCategory(Goal.Category category) {
-        selectedCategory = category;
-        binding.WorkButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
-        binding.HomeButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
-        binding.SchoolButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
-        binding.ErrandsButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
+    private void setUpCategoryButtonClickListeners() {
+        FloatingActionButton homeButton = binding.getRoot().findViewById(R.id.HomeButton);
+        FloatingActionButton workButton = binding.getRoot().findViewById(R.id.WorkButton);
+        FloatingActionButton schoolButton = binding.getRoot().findViewById(R.id.SchoolButton);
+        FloatingActionButton errandsButton = binding.getRoot().findViewById(R.id.ErrandsButton);
 
-        switch (category) {
-            case WORK:
-                binding.WorkButton.setBackgroundTintList(ColorStateList.valueOf(0xF6F740));
-                break;
-            case HOME:
-                binding.HomeButton.setBackgroundTintList(ColorStateList.valueOf(0x39A0ED));
-                break;
-            case SCHOOL:
-                binding.SchoolButton.setBackgroundTintList(ColorStateList.valueOf(0xFF00FF));
-                break;
-            case ERRANDS:
-                binding.ErrandsButton.setBackgroundTintList(ColorStateList.valueOf(0x13C4A3));
-                break;
-        }
+        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME));
+        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK));
+        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL));
+        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS));
+    }
+
+    private void onCategoryButtonClick(Goal.Category clickedCategory) {
+        selectedCategory = clickedCategory;
     }
 }

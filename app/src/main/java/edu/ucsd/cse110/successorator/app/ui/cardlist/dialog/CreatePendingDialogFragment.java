@@ -10,10 +10,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.Calendar;
 import java.util.Date;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
+import edu.ucsd.cse110.successorator.app.R;
 import edu.ucsd.cse110.successorator.app.databinding.FragmentDialogCreatePendingBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
@@ -21,6 +24,8 @@ public class CreatePendingDialogFragment extends DialogFragment {
     private FragmentDialogCreatePendingBinding view;
 
     private MainViewModel activityModel;
+
+    private Goal.Category selectedCategory = Goal.Category.NONE;
 
     CreatePendingDialogFragment() {
 
@@ -48,6 +53,8 @@ public class CreatePendingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         this.view = FragmentDialogCreatePendingBinding.inflate(getLayoutInflater());
 
+        setUpCategoryButtonClickListeners();
+
         return new AlertDialog.Builder(getActivity())
                 .setTitle("New Goal")
                 .setMessage("What's your next goal?")
@@ -65,13 +72,29 @@ public class CreatePendingDialogFragment extends DialogFragment {
             return;
         }
 
-        var card = new Goal(0, front, false, -1, null, Goal.RepeatInterval.ONE_TIME, Goal.Category.NONE);
+        var card = new Goal(0, front, false, -1, null, Goal.RepeatInterval.ONE_TIME, selectedCategory);
         activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
         dialog.dismiss();
     }
 
     private void onNegativeButtonClick(DialogInterface dialog, int which) {
         dialog.cancel();
+    }
+
+    private void setUpCategoryButtonClickListeners() {
+        FloatingActionButton homeButton = view.getRoot().findViewById(R.id.HomeButton);
+        FloatingActionButton workButton = view.getRoot().findViewById(R.id.WorkButton);
+        FloatingActionButton schoolButton = view.getRoot().findViewById(R.id.SchoolButton);
+        FloatingActionButton errandsButton = view.getRoot().findViewById(R.id.ErrandsButton);
+
+        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME));
+        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK));
+        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL));
+        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS));
+    }
+
+    private void onCategoryButtonClick(Goal.Category clickedCategory) {
+        selectedCategory = clickedCategory;
     }
 
 }
