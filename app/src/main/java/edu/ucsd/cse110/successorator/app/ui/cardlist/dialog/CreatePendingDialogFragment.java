@@ -65,7 +65,7 @@ public class CreatePendingDialogFragment extends DialogFragment {
             return;
         }
 
-        var card = new Goal(0, front, false, -1, null, Goal.RepeatInterval.ONE_TIME);
+        var card = new Goal(0, front, false, -1, null, Goal.RepeatInterval.ONE_TIME, Goal.Category.NONE);
         activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
         dialog.dismiss();
     }

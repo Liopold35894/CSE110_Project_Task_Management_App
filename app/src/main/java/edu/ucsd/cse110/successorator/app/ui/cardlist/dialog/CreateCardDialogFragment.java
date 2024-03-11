@@ -3,6 +3,7 @@ package edu.ucsd.cse110.successorator.app.ui.cardlist.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,10 @@ public class CreateCardDialogFragment extends DialogFragment {
 
     private static final String ARG_FRAGMENT_TYPE = "fragment_type";
     private String fragmentType;
+
+    private Goal.Category selectedCategory = Goal.Category.NONE;
+
+
 
     CreateCardDialogFragment() {
 
@@ -53,6 +58,11 @@ public class CreateCardDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         this.view = FragmentDialogCreateCardBinding.inflate(getLayoutInflater());
+
+        view.WorkButton.setOnClickListener(v -> selectCategory(Goal.Category.WORK));
+        view.HomeButton.setOnClickListener(v -> selectCategory(Goal.Category.HOME));
+        view.SchoolButton.setOnClickListener(v -> selectCategory(Goal.Category.SCHOOL));
+        view.ErrandsButton.setOnClickListener(v -> selectCategory(Goal.Category.ERRANDS));
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle("New Goal")
@@ -91,7 +101,19 @@ public class CreateCardDialogFragment extends DialogFragment {
         else if(view.yearlyButton.isChecked()){
             repeatInterval = Goal.RepeatInterval.YEARLY;
         }
-        var card = new Goal(0, front, false, -1, date, repeatInterval);
+        if(view.WorkButton.isSelected()){
+            selectedCategory = Goal.Category.WORK;
+        }
+        else if(view.HomeButton.isSelected()){
+            selectedCategory = Goal.Category.HOME;
+        }
+        else if(view.SchoolButton.isSelected()){
+            selectedCategory = Goal.Category.SCHOOL;
+        }
+        else if(view.ErrandsButton.isSelected()){
+            selectedCategory = Goal.Category.ERRANDS;
+        }
+        var card = new Goal(0, front, false, -1, date, repeatInterval, selectedCategory);
         activityModel.addBehindUnfinishedAndInFrontOfFinished(card);
 
         dialog.dismiss();
@@ -102,7 +124,28 @@ public class CreateCardDialogFragment extends DialogFragment {
         dialog.cancel();
     }
 
+    private void selectCategory(Goal.Category category) {
+        selectedCategory = category;
+        view.WorkButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
+        view.HomeButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
+        view.SchoolButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
+        view.ErrandsButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
 
+        switch (category) {
+            case WORK:
+                view.WorkButton.setBackgroundTintList(ColorStateList.valueOf(0xF6F740));
+                break;
+            case HOME:
+                view.HomeButton.setBackgroundTintList(ColorStateList.valueOf(0x39A0ED));
+                break;
+            case SCHOOL:
+                view.SchoolButton.setBackgroundTintList(ColorStateList.valueOf(0xFF00FF));
+                break;
+            case ERRANDS:
+                view.ErrandsButton.setBackgroundTintList(ColorStateList.valueOf(0x13C4A3));
+                break;
+        }
+    }
 
 
 }

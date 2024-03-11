@@ -79,16 +79,16 @@ public class MoveGoalDialogFragment extends DialogFragment {
                 .setItems(new CharSequence[]{"Move to Today", "Move to Tomorrow","Finish", "Delete"}, (dialog, which) -> {
                     switch (which) {
                         case 0:
-                            activityModel.addBehindUnfinishedAndInFrontOfFinished(new Goal(0,goal.getName(),false,-1,today.getTime(), Goal.RepeatInterval.ONE_TIME));
+                            activityModel.addBehindUnfinishedAndInFrontOfFinished(new Goal(0,goal.getName(),false,-1,today.getTime(), Goal.RepeatInterval.ONE_TIME, Goal.Category.NONE));
                             dialog.dismiss();
                             activityModel.remove(goalId);
                             break;
                         case 1:
-                            activityModel.addBehindUnfinishedAndInFrontOfFinished(new Goal(0,goal.getName(),false,-1,tomorrow.getTime(), Goal.RepeatInterval.ONE_TIME));
+                            activityModel.addBehindUnfinishedAndInFrontOfFinished(new Goal(0,goal.getName(),false,-1,tomorrow.getTime(), Goal.RepeatInterval.ONE_TIME, Goal.Category.NONE));
                             activityModel.remove(goalId);
                             break;
                         case 2:
-                            activityModel.addBehindUnfinishedAndInFrontOfFinished(new Goal(0, goal.getName(), true, -1,today.getTime(), Goal.RepeatInterval.ONE_TIME));
+                            activityModel.addBehindUnfinishedAndInFrontOfFinished(new Goal(0, goal.getName(), true, -1,today.getTime(), Goal.RepeatInterval.ONE_TIME, Goal.Category.NONE));
                             activityModel.remove(goalId);
                         case 3:
                             activityModel.remove(goalId);

@@ -30,21 +30,25 @@ public class GoalEntity {
     @ColumnInfo(name = "repeat_interval")
     public Goal.RepeatInterval repeatInterval;
 
-    GoalEntity(@NonNull String name, Boolean isFinished, int sortOrder, String date, Goal.RepeatInterval repeatInterval) {
+    @ColumnInfo(name = "category")
+    public Goal.Category category;
+
+    GoalEntity(@NonNull String name, Boolean isFinished, int sortOrder, String date, Goal.RepeatInterval repeatInterval, Goal.Category category) {
         this.name = name;
         this.isFinished = isFinished;
         this.sortOrder = sortOrder;
         this.date = date;
         this.repeatInterval = repeatInterval;
+        this.category = category;
     }
 
     public static GoalEntity fromGoal(@NonNull Goal goal) {
-        var card = new GoalEntity(goal.getName(), goal.isFinished(), goal.sortOrder(), Converters.dateToString(goal.getDate()), goal.getRepeatInterval());
+        var card = new GoalEntity(goal.getName(), goal.isFinished(), goal.sortOrder(), Converters.dateToString(goal.getDate()), goal.getRepeatInterval(), goal.getCategory());
         card.id = goal.getId();
         return card;
     }
 
     public @NonNull Goal toGoal() {
-        return new Goal(id, name, isFinished, sortOrder, Converters.fromString(date), repeatInterval);
+        return new Goal(id, name, isFinished, sortOrder, Converters.fromString(date), repeatInterval, category);
     }
 }

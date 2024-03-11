@@ -3,6 +3,7 @@ package edu.ucsd.cse110.successorator.app.ui.cardlist.dialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
@@ -25,6 +26,8 @@ public class CreateRecurringDialogFragment extends DialogFragment {
     private FragmentDialogCreateRecurringBinding binding;
     private MainViewModel activityModel;
     private Calendar selectedDate;
+
+    private Goal.Category selectedCategory = Goal.Category.NONE;
 
     public static CreateRecurringDialogFragment newInstance() {
         return new CreateRecurringDialogFragment();
@@ -88,14 +91,48 @@ public class CreateRecurringDialogFragment extends DialogFragment {
         } else if (binding.yearlyButton.isChecked()) {
             repeatInterval = Goal.RepeatInterval.YEARLY;
         }
-
+        if(binding.WorkButton.isSelected()){
+            selectedCategory = Goal.Category.WORK;
+        }
+        else if(binding.HomeButton.isSelected()){
+            selectedCategory = Goal.Category.HOME;
+        }
+        else if(binding.SchoolButton.isSelected()){
+            selectedCategory = Goal.Category.SCHOOL;
+        }
+        else if(binding.ErrandsButton.isSelected()){
+            selectedCategory = Goal.Category.ERRANDS;
+        }
         if (!goalName.isEmpty()) {
-            Goal newGoal = new Goal(0, goalName, false, -1, selectedDate.getTime(), repeatInterval);
+            Goal newGoal = new Goal(0, goalName, false, -1, selectedDate.getTime(), repeatInterval, selectedCategory);
             activityModel.addBehindUnfinishedAndInFrontOfFinished(newGoal);
         }
     }
 
     private void onNegativeButtonClick(DialogInterface dialogInterface, int i) {
         dialogInterface.cancel();
+    }
+
+    private void selectCategory(Goal.Category category) {
+        selectedCategory = category;
+        binding.WorkButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
+        binding.HomeButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
+        binding.SchoolButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
+        binding.ErrandsButton.setBackgroundTintList(ColorStateList.valueOf(0xE9E3E6));
+
+        switch (category) {
+            case WORK:
+                binding.WorkButton.setBackgroundTintList(ColorStateList.valueOf(0xF6F740));
+                break;
+            case HOME:
+                binding.HomeButton.setBackgroundTintList(ColorStateList.valueOf(0x39A0ED));
+                break;
+            case SCHOOL:
+                binding.SchoolButton.setBackgroundTintList(ColorStateList.valueOf(0xFF00FF));
+                break;
+            case ERRANDS:
+                binding.ErrandsButton.setBackgroundTintList(ColorStateList.valueOf(0x13C4A3));
+                break;
+        }
     }
 }

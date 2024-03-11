@@ -136,7 +136,7 @@ public class SimpleGoalRepository implements GoalRepository {
 
             // If the next occurrence is today or in the future, add a new goal to the repository
             if (goal.getDate().before(currentDate)) {
-                Goal newGoal = new Goal(goal.getId(), goal.getName(), false, goal.sortOrder(), nextDate, goal.getRepeatInterval());
+                Goal newGoal = new Goal(goal.getId(), goal.getName(), false, goal.sortOrder(), nextDate, goal.getRepeatInterval(), goal.getCategory());
                 save(newGoal);
                 remove(oldId);
             }

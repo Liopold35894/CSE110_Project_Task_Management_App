@@ -220,7 +220,7 @@ public class MainViewModel extends ViewModel {
                     }
                     nextDate = calendar.getTime();
                 }
-                Goal newGoal = new Goal(0, goal.getName(), false, goal.sortOrder(), nextDate, goal.getRepeatInterval());
+                Goal newGoal = new Goal(0, goal.getName(), false, goal.sortOrder(), nextDate, goal.getRepeatInterval(), goal.getCategory());
                 goalRepository.addGoalBetweenFinishedAndUnfinished(newGoal);
                 goalRepository.remove(oldId);
             }
@@ -232,7 +232,7 @@ public class MainViewModel extends ViewModel {
     public void toggleCompleted(Goal goal) {
         //if goal is unfinished we do this
         if (!goal.isFinished()) {
-            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder(), goal.getDate(), goal.getRepeatInterval());
+            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder(), goal.getDate(), goal.getRepeatInterval(), goal.getCategory());
             goalRepository.save(newGoal);
             // remove the goal
             goalRepository.remove(goal.getId());
@@ -240,7 +240,7 @@ public class MainViewModel extends ViewModel {
         }
         //if goal is finished we do this
         else {
-            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder(), goal.getDate(), goal.getRepeatInterval());
+            var newGoal = new Goal(goal.getId(), goal.getName(), !goal.isFinished(), goal.sortOrder(), goal.getDate(), goal.getRepeatInterval(), goal.getCategory());
             goalRepository.save(newGoal);
             // remove the goal
             goalRepository.remove(goal.getId());

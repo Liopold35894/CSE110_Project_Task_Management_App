@@ -15,6 +15,8 @@ public class Goal implements Serializable {
     private final Date date;
     private final RepeatInterval repeatInterval;
 
+    private final Category category;
+
     public boolean isFinished;
     private int sortOrder;
 
@@ -26,11 +28,20 @@ public class Goal implements Serializable {
         YEARLY
     }
 
+    public enum Category {
+        WORK,
+        HOME,
+        SCHOOL,
+        ERRANDS,
+        NONE
+    }
+
     public Goal(
             @NonNull Integer id,
             @Nullable String name,
             boolean isFinished,
-            int sortOrder
+            int sortOrder,
+            Category category
     ) {
         this.id = id;
         this.name = name;
@@ -38,6 +49,7 @@ public class Goal implements Serializable {
         this.sortOrder = sortOrder;
         this.date = new Date();
         this.repeatInterval = RepeatInterval.ONE_TIME;
+        this.category = category;
     }
 
     public Goal(
@@ -46,7 +58,8 @@ public class Goal implements Serializable {
             boolean isFinished,
             int sortOrder,
             Date date,
-            RepeatInterval repeatInterval
+            RepeatInterval repeatInterval,
+            Category category
     ) {
         this.id = id;
         this.name = name;
@@ -54,6 +67,7 @@ public class Goal implements Serializable {
         this.sortOrder = sortOrder;
         this.date = date;
         this.repeatInterval = repeatInterval;
+        this.category = category;
     }
 
     @Nullable
@@ -80,8 +94,13 @@ public class Goal implements Serializable {
         return repeatInterval;
     }
 
+    @NonNull
+    public Category getCategory() {
+        return category;
+    }
+
     public Goal withRepeatInterval(RepeatInterval repeatInterval) {
-        return new Goal(id, name, isFinished, sortOrder, date, repeatInterval);
+        return new Goal(id, name, isFinished, sortOrder, date, repeatInterval, category);
     }
 
     public int sortOrder() {
@@ -89,11 +108,15 @@ public class Goal implements Serializable {
     }
 
     public Goal withId(int id) {
-        return new Goal(id, name, isFinished, sortOrder, date, repeatInterval);
+        return new Goal(id, name, isFinished, sortOrder, date, repeatInterval, category);
     }
 
     public Goal withSortOrder(int sortOrder) {
-        return new Goal(id, name, isFinished, sortOrder, date, repeatInterval);
+        return new Goal(id, name, isFinished, sortOrder, date, repeatInterval, category);
+    }
+
+    public Goal withCategory(Category category) {
+        return new Goal(id, name, isFinished, sortOrder, date, repeatInterval, category);
     }
 
     public void setIsFinished(Boolean isFinished) { this.isFinished = isFinished; }

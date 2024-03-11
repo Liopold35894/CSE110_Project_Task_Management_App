@@ -64,11 +64,11 @@
             app:layout_constraintVertical_bias="0.25">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/WorkButton"
+                android:id="@+id/HomeButton"
                 android:layout_width="108dp"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:contentDescription="Work"
+                android:contentDescription="Home"
                 android:src="@android:color/transparent"
                 app:backgroundTint="#FFEB3B"
                 tools:layout_editor_absoluteY="138dp" />
@@ -99,11 +99,11 @@
             app:layout_constraintVertical_bias="0.25">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/HomeButton"
+                android:id="@+id/WorkButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:contentDescription="Home"
+                android:contentDescription="Work"
                 android:src="@android:color/transparent"
                 app:backgroundTint="#00BCD4"
                 tools:layout_editor_absoluteY="138dp" />
