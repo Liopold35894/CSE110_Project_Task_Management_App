@@ -48,6 +48,7 @@ public class CreateRecurringDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         binding = FragmentDialogCreateRecurringBinding.inflate(getLayoutInflater());
         updateDateInView();
+        setUpCategoryButtonClickListeners();
         binding.editTextTime.setOnClickListener(v -> showDatePicker());
 
         return new AlertDialog.Builder(getActivity())

@@ -48,7 +48,7 @@ public class RecurrentListAdapter extends ArrayAdapter<Goal> {
             binding = ListItemCardBinding.inflate(layoutInflater, parent, false);
         }
         // Populate the view with the flashcard's data.
-        binding.cardFrontText.setText(goal.getName());
+        binding.cardFrontText.setText(goal.getName() + " " + goal.getCategory().name());
         int goalId = goal.getId();
         binding.cardFrontText.setOnLongClickListener(v -> {
             // Create a new instance of MoveGoalDialogFragment
