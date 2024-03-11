@@ -75,7 +75,22 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
 
         // Populate the view with the flashcard's data.
         binding.cardFrontText.setText(goal.getName());
-        binding.categoryName.setText(goal.getCategory().name());
+        String emoji = "";
+        switch (goal.getCategory()) {
+            case WORK:
+                emoji = "💼";
+                break;
+            case SCHOOL:
+                emoji = "🏫";
+                break;
+            case HOME:
+                emoji = "🏠";
+                break;
+            case ERRANDS:
+                emoji = "🗒";
+                break;
+        }
+        binding.categoryName.setText(emoji + " " + goal.getCategory().name());
         //this is the way to use strikethrough
 //        binding.cardFrontText.setPaintFlags(binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
