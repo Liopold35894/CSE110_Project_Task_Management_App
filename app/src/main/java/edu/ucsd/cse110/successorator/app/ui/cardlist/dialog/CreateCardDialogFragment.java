@@ -33,7 +33,6 @@ public class CreateCardDialogFragment extends DialogFragment {
 
     private static final String ARG_FRAGMENT_TYPE = "fragment_type";
     private String fragmentType;
-
     private Goal.Category selectedCategory = Goal.Category.NONE;
 
     FloatingActionButton homeButton;
