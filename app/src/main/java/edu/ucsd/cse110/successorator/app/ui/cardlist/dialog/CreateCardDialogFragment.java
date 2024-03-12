@@ -135,17 +135,32 @@ public class CreateCardDialogFragment extends DialogFragment {
 
     private void setUpCategoryButtonClickListeners() {
 
-        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME, homeButton));
-        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK,workButton));
-        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL, schoolButton));
-        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS, errandsButton));
+        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME, "h"));
+        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK,"w"));
+        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL, "s"));
+        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS, "e"));
 
     }
 
-    private void onCategoryButtonClick(Goal.Category clickedCategory, FloatingActionButton button) {
+    private void onCategoryButtonClick(Goal.Category clickedCategory, String button) {
         selectedCategory = clickedCategory;
         var back = view.getRoot().findViewById(R.id.radioGroup);
-//        back.setBackgroundColor(Color.RED);
+
+        switch (button) {
+            case "h":
+                back.setBackgroundColor(Color.rgb(255,255,153));
+                break;
+            case "w":
+                back.setBackgroundColor(Color.rgb(153,255,255));
+                break;
+            case "s":
+                back.setBackgroundColor(Color.rgb(204,153,255));
+                break;
+            case "e":
+                back.setBackgroundColor(Color.rgb(153,255,153));
+                break;
+        }
+
     }
 
 }

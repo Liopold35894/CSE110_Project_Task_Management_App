@@ -66,7 +66,6 @@ public class CardListFragment extends Fragment {
             requireActivity().addMenuProvider(new MenuProvider() {
                 @Override
                 public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-//                    menuInflater.inflate(R.menu.action_bar, menu);
                 }
 
                 @Override
@@ -114,7 +113,6 @@ public class CardListFragment extends Fragment {
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
-
 
     }
 

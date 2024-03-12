@@ -38,12 +38,12 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
         this.date = date;
         this.onDeleteClick = onDeleteClick;
         this.toggleCompleted = togggleCompleted;
-
-        for (Goal goal : goals) {
-            if (isSameDay(goal.getDate(), date)) {
-                add(goal);
-            }
-        }
+//
+//        for (Goal goal : goals) {
+//            if (isSameDay(goal.getDate(), date)) {
+//                add(goal);
+//            }
+//        }
     }
 
     private boolean isSameDay(Date date1, Date date2) {
@@ -94,7 +94,6 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
         //this is the way to use strikethrough
 //        binding.cardFrontText.setPaintFlags(binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-//        binding.cardFrontText.setText(goal.getName() + goal.getDate().toString());
         if (goal.isFinished()) {
             binding.cardFrontText.setPaintFlags( binding.cardFrontText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else {

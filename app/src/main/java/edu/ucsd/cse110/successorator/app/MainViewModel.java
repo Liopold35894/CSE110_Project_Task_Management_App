@@ -12,8 +12,8 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +36,6 @@ public class MainViewModel extends ViewModel {
     // UI state
     private final MutableSubject<Boolean> isEmpty;
     private final MutableSubject<List<Goal>> orderedCards;
-    private final MutableSubject<Goal> topCard;
     private final MutableSubject<String> displayedText;
 
     private final MutableSubject<List<Goal>> todayGoal;
@@ -64,14 +63,16 @@ public class MainViewModel extends ViewModel {
         this.date = new Date();
         this.isEmpty = new SimpleSubject<>();
         this.orderedCards = new SimpleSubject<>();
-        this.topCard = new SimpleSubject<>();
         this.displayedText = new SimpleSubject<>();
         this.todayGoal = new SimpleSubject<>();
         this.tomorrowGoal = new SimpleSubject<>();
         this.pendingGoals = new SimpleSubject<>();
         this.recurrentGoals = new SimpleSubject<>();
+        update();
 
+    }
 
+    public void update() {
         // When the list of cards changes (or is first loaded), reset the ordering.
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {
@@ -86,10 +87,14 @@ public class MainViewModel extends ViewModel {
 
             orderedCards.setValue(newOrderedCards);
 
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            Date tomorrowDate = calendar.getTime();
+
             var todayGoals = cards.stream()
                     .filter(goal -> goal.getDate() != null)
                     .sorted(Comparator.comparingInt(Goal::sortOrder))
-                    .filter(goal -> !goal.getDate().after(this.date))
+                    .filter(goal -> goal.getDate().before(tomorrowDate))
                     .collect(Collectors.toList());
 
             this.todayGoal.setValue(todayGoals);
@@ -108,9 +113,7 @@ public class MainViewModel extends ViewModel {
 
             this.recurrentGoals.setValue(recurrent);
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            Date tomorrowDate = calendar.getTime();
+
 
             var tomorrowGoals = cards.stream()
                     .filter(goal -> goal.getDate() != null)
@@ -120,23 +123,6 @@ public class MainViewModel extends ViewModel {
 
             this.tomorrowGoal.setValue(tomorrowGoals);
 
-        });
-
-        // When the ordering changes, update the top card.
-        orderedCards.observe(cards -> {
-            if (cards == null || cards.size() == 0) {
-                this.isEmpty.setValue(Boolean.TRUE);
-                return;
-            }
-            var card = cards.get(0);
-            this.topCard.setValue(card);
-        });
-
-        // When the top card changes, update the displayed text and display the front side.
-        topCard.observe(card -> {
-            if (card == null) return;
-
-            displayedText.setValue(card.getName());
         });
     }
 
@@ -182,6 +168,7 @@ public class MainViewModel extends ViewModel {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong("nextClear", nextClearTime.getTimeInMillis());
         editor.apply();
+        update();
     }
 
     public void addRecurringGoals() {
@@ -215,7 +202,9 @@ public class MainViewModel extends ViewModel {
                             calendar.add(Calendar.WEEK_OF_YEAR, 1);
                             break;
                         case MONTHLY:
-                            calendar.add(Calendar.MONTH, 1);
+                            Date date = Date.from(getNextMonthSameDayOfWeek(goalDate).atStartOfDay().toInstant(ZoneOffset.ofHours(0)));
+                            calendar.setTime(date);
+                            calendar.add(Calendar.DAY_OF_YEAR, 1);
                             break;
                         case YEARLY:
                             calendar.add(Calendar.YEAR, 1);
@@ -230,8 +219,8 @@ public class MainViewModel extends ViewModel {
         }
     }
     private static LocalDate getNextMonthSameDayOfWeek(Date date) {
-        LocalDate today = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return today.plus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.dayOfWeekInMonth(Integer.parseInt(new SimpleDateFormat("F").format(date)),today.getDayOfWeek()));
+        LocalDate goalDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return goalDate.plus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.dayOfWeekInMonth(Integer.parseInt(new SimpleDateFormat("F").format(date)),goalDate.getDayOfWeek()));
     }
 
 
