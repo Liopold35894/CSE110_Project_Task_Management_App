@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -34,6 +35,11 @@ public class CreateCardDialogFragment extends DialogFragment {
     private String fragmentType;
 
     private Goal.Category selectedCategory = Goal.Category.NONE;
+
+    FloatingActionButton homeButton;
+    FloatingActionButton workButton;
+    FloatingActionButton schoolButton;
+    FloatingActionButton errandsButton;
 
 
     CreateCardDialogFragment() {
@@ -65,6 +71,10 @@ public class CreateCardDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         this.view = FragmentDialogCreateCardBinding.inflate(getLayoutInflater());
 
+        homeButton = view.getRoot().findViewById(R.id.HomeButton);
+        workButton = view.getRoot().findViewById(R.id.WorkButton);
+        schoolButton = view.getRoot().findViewById(R.id.SchoolButton);
+        errandsButton = view.getRoot().findViewById(R.id.ErrandsButton);
         setUpCategoryButtonClickListeners();
 
         return new AlertDialog.Builder(getActivity())
@@ -124,19 +134,18 @@ public class CreateCardDialogFragment extends DialogFragment {
     }
 
     private void setUpCategoryButtonClickListeners() {
-        FloatingActionButton homeButton = view.getRoot().findViewById(R.id.HomeButton);
-        FloatingActionButton workButton = view.getRoot().findViewById(R.id.WorkButton);
-        FloatingActionButton schoolButton = view.getRoot().findViewById(R.id.SchoolButton);
-        FloatingActionButton errandsButton = view.getRoot().findViewById(R.id.ErrandsButton);
 
-        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME));
-        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK));
-        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL));
-        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS));
+        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME, homeButton));
+        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK,workButton));
+        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL, schoolButton));
+        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS, errandsButton));
+
     }
 
-    private void onCategoryButtonClick(Goal.Category clickedCategory) {
+    private void onCategoryButtonClick(Goal.Category clickedCategory, FloatingActionButton button) {
         selectedCategory = clickedCategory;
+        var back = view.getRoot().findViewById(R.id.radioGroup);
+//        back.setBackgroundColor(Color.RED);
     }
 
 }
