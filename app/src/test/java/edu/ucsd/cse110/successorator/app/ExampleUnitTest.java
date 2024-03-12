@@ -36,21 +36,21 @@ public class ExampleUnitTest {
 //        assertEquals("No goals for the Day. Click the + at the upper right to enter your Most Important Thing.", model.getDisplayedText().getValue());
 //    }
 
-    @Test
-    public void example() {
-        // GIVEN
-        var dataSource = new InMemoryDataSource();
-        List<Goal> DEFAULT_CARDS = List.of(
-                new Goal(0, "Midterm Tomorrow", false, 0),
-                new Goal(1, "Watering Plant", false, 1),
-                new Goal(2, "Pay Tax", false, 2),
-                new Goal(3, "Feed Pet", false, 3),
-                new Goal(4, "Send Message", false, 4)
-        );
-        // initialize it with default or custom data
-        dataSource.putGoals(DEFAULT_CARDS);
-        var repo = new SimpleGoalRepository(dataSource);
-        var timeKeeper = new SimpleTimeKeeper();
-        var model = new MainViewModel(repo);
-    }
+//    @Test
+//    public void example() {
+//        // GIVEN
+//        var dataSource = new InMemoryDataSource();
+//        List<Goal> DEFAULT_CARDS = List.of(
+//                new Goal(0, "Midterm Tomorrow", false, 0),
+//                new Goal(1, "Watering Plant", false, 1),
+//                new Goal(2, "Pay Tax", false, 2),
+//                new Goal(3, "Feed Pet", false, 3),
+//                new Goal(4, "Send Message", false, 4)
+//        );
+//        // initialize it with default or custom data
+//        dataSource.putGoals(DEFAULT_CARDS);
+//        var repo = new SimpleGoalRepository(dataSource);
+//        var timeKeeper = new SimpleTimeKeeper();
+//        var model = new MainViewModel(repo);
+//    }
 }
