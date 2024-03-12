@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.Toast;
@@ -33,6 +34,12 @@ public class CreateRecurringDialogFragment extends DialogFragment {
 
     private Goal.Category selectedCategory = Goal.Category.NONE;
 
+    FloatingActionButton homeButton;
+    FloatingActionButton workButton;
+    FloatingActionButton schoolButton;
+    FloatingActionButton errandsButton;
+
+
     public static CreateRecurringDialogFragment newInstance() {
         return new CreateRecurringDialogFragment();
     }
@@ -48,6 +55,11 @@ public class CreateRecurringDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         binding = FragmentDialogCreateRecurringBinding.inflate(getLayoutInflater());
+
+        homeButton = binding.getRoot().findViewById(R.id.HomeButton);
+        workButton = binding.getRoot().findViewById(R.id.WorkButton);
+        schoolButton = binding.getRoot().findViewById(R.id.SchoolButton);
+        errandsButton = binding.getRoot().findViewById(R.id.ErrandsButton);
         updateDateInView();
         setUpCategoryButtonClickListeners();
         binding.editTextTime.setOnClickListener(v -> showDatePicker());
@@ -114,18 +126,33 @@ public class CreateRecurringDialogFragment extends DialogFragment {
     }
 
     private void setUpCategoryButtonClickListeners() {
-        FloatingActionButton homeButton = binding.getRoot().findViewById(R.id.HomeButton);
-        FloatingActionButton workButton = binding.getRoot().findViewById(R.id.WorkButton);
-        FloatingActionButton schoolButton = binding.getRoot().findViewById(R.id.SchoolButton);
-        FloatingActionButton errandsButton = binding.getRoot().findViewById(R.id.ErrandsButton);
 
-        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME));
-        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK));
-        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL));
-        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS));
+        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME, "h"));
+        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK,"w"));
+        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL, "s"));
+        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS, "e"));
+
     }
 
-    private void onCategoryButtonClick(Goal.Category clickedCategory) {
+    private void onCategoryButtonClick(Goal.Category clickedCategory, String button) {
         selectedCategory = clickedCategory;
+        var back = binding.getRoot().findViewById(R.id.radioGroup);
+
+        switch (button) {
+            case "h":
+                back.setBackgroundColor(Color.rgb(255,255,153));
+                break;
+            case "w":
+                back.setBackgroundColor(Color.rgb(153,255,255));
+                break;
+            case "s":
+                back.setBackgroundColor(Color.rgb(204,153,255));
+                break;
+            case "e":
+                back.setBackgroundColor(Color.rgb(153,255,153));
+                break;
+        }
+
     }
+
 }
