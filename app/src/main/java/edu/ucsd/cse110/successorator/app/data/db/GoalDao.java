@@ -74,22 +74,18 @@ public interface GoalDao {
     @Query("SELECT MIN(sort_order) FROM goals WHERE isFinished = 1")
     int getMinSortOrderFinished();
 
-    @Query("SELECT MAX(sort_order) FROM goals WHERE category = :category")
-    int getMaxSortOrderByCategory(Goal.Category category);
-
     @Transaction
     default int addGoalBetweenFinishedAndUnfinished(GoalEntity goal) {
-        int maxSortOrder = getMaxSortOrderByCategory(goal.category);
+        int unfinishedMaxSortOrder = getMaxSortOrderUnfinished();
+        int finishedMinSortOrder = getMinSortOrderFinished();
 
-        // Shift sort order for goals with the given category
-        shiftSortOrder(maxSortOrder, getMaxSortOrder(), 1);
+        // Shift sort order behind finished goals
+        shiftSortOrderBehindFinished(unfinishedMaxSortOrder, finishedMinSortOrder);
+        int newSortOrder = unfinishedMaxSortOrder + 1;
 
-        // Insert the new goal in between
-        int newSortOrder = maxSortOrder + 1;
         var newGoal = new GoalEntity(goal.name, goal.isFinished, newSortOrder, goal.date, goal.repeatInterval, goal.category);
         return Math.toIntExact(insert(newGoal));
     }
-
 
     @Query("DELETE FROM goals WHERE id = :id")
     void delete(int id);

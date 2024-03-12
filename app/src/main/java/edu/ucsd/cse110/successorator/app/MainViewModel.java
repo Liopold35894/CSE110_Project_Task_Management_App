@@ -74,14 +74,14 @@ public class MainViewModel extends ViewModel {
             this.isEmpty.setValue(Boolean.FALSE);
 
             var newOrderedCards = cards.stream()
-                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .sorted(Comparator.comparingInt(Goal::category))
                     .collect(Collectors.toList());
 
             orderedCards.setValue(newOrderedCards);
 
             var todayGoals = cards.stream()
                     .filter(goal -> goal.getDate() != null)
-                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .sorted(Comparator.comparingInt(Goal::category))
                     .filter(goal -> !goal.getDate().after(this.date))
                     .collect(Collectors.toList());
 
@@ -89,14 +89,14 @@ public class MainViewModel extends ViewModel {
 
             var pending = cards.stream()
                     .filter(goal -> goal.getDate() == null)
-                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .sorted(Comparator.comparingInt(Goal::category))
                     .collect(Collectors.toList());
 
             this.pendingGoals.setValue(pending);
 
             var recurrent = cards.stream()
                     .filter(goal -> goal.getRepeatInterval() != Goal.RepeatInterval.ONE_TIME)
-                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .sorted(Comparator.comparingInt(Goal::category))
                     .collect(Collectors.toList());
 
             this.recurrentGoals.setValue(recurrent);
