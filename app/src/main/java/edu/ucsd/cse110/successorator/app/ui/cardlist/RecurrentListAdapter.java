@@ -49,6 +49,22 @@ public class RecurrentListAdapter extends ArrayAdapter<Goal> {
         }
         // Populate the view with the flashcard's data.
         binding.cardFrontText.setText(goal.getName());
+        String emoji = "";
+        switch (goal.getCategory()) {
+            case WORK:
+                emoji = "💼";
+                break;
+            case SCHOOL:
+                emoji = "🏫";
+                break;
+            case HOME:
+                emoji = "🏠";
+                break;
+            case ERRANDS:
+                emoji = "🗒";
+                break;
+        }
+        binding.categoryName.setText(emoji + " " + goal.getCategory().name());
         int goalId = goal.getId();
         binding.cardFrontText.setOnLongClickListener(v -> {
             // Create a new instance of MoveGoalDialogFragment

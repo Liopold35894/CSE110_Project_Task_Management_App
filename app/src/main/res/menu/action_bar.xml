@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/app_bar_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:title="Mode"
+            app:showAsAction="always" />
     <item android:id="@+id/action_bar_menu_swap_views"
             android:title="@string/swap_views"
             android:icon="@drawable/drop_down"
