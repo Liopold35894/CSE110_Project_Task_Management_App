@@ -29,8 +29,8 @@ public class Goal implements Serializable {
     }
 
     public enum Category {
-        WORK,
         HOME,
+        WORK,
         SCHOOL,
         ERRANDS,
         NONE
@@ -106,6 +106,8 @@ public class Goal implements Serializable {
     public int sortOrder() {
         return sortOrder;
     }
+
+    public int category() {return category.ordinal(); }
 
     public Goal withId(int id) {
         return new Goal(id, name, isFinished, sortOrder, date, repeatInterval, category);

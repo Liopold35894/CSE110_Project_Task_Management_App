@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Comparator;
 
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
@@ -80,16 +81,12 @@ public class SimpleGoalRepository implements GoalRepository {
         // Get all the goals from the data source
         List<Goal> allGoals = dataSource.getGoals();
 
-
         // Find the index where the new goal should be inserted
-        List<Goal.Category> categories = Arrays.asList(Goal.Category.HOME, Goal.Category.WORK, Goal.Category.SCHOOL, Goal.Category.ERRANDS);
-
         int insertIndex = 0;
 
         for (Goal existingGoal : allGoals) {
-            if (categories.indexOf(goal.getCategory()) < categories.indexOf(existingGoal.getCategory())) {
-                System.out.println(categories.indexOf(goal.getCategory()));
-                System.out.println(categories.indexOf(existingGoal.getCategory()));
+            // If the existing goal is finished, stop searching and insert behind it
+            if (existingGoal.isFinished()) {
                 break;
             }
             insertIndex++;
