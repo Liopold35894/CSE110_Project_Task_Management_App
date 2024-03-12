@@ -8,6 +8,13 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -158,15 +165,11 @@ public class MainViewModel extends ViewModel {
 
         if (nextClear > 0) {
             nextClearTime.setTimeInMillis(nextClear);
-            getRecurrentGoals().observe(new Observer<List<Goal>>() {
-                @Override
-                public void onChanged(List<Goal> goals) {
-                    addRecurringGoals();
-                    if (currentTime.after(nextClearTime)) {
-                        goalRepository.removeFinishedGoals();
-                    }
-                }
-            });
+
+            addRecurringGoals();
+            if (currentTime.after(nextClearTime)) {
+                goalRepository.removeFinishedGoals();
+            }
         }
         nextClearTime.setTimeInMillis(System.currentTimeMillis());
         nextClearTime.set(Calendar.HOUR_OF_DAY, 2);
@@ -226,7 +229,10 @@ public class MainViewModel extends ViewModel {
             }
         }
     }
-
+    private static LocalDate getNextMonthSameDayOfWeek(Date date) {
+        LocalDate today = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return today.plus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.dayOfWeekInMonth(Integer.parseInt(new SimpleDateFormat("F").format(date)),today.getDayOfWeek()));
+    }
 
 
     public void toggleCompleted(Goal goal) {

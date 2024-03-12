@@ -88,9 +88,6 @@ public class CardListFragment extends Fragment {
                         thisItem.setVisible(true);
                     }
                 }
-
-
-
                 @Override
                 public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                     return false;
@@ -175,6 +172,8 @@ public class CardListFragment extends Fragment {
 
     @Override
     public void onResume() {
+        this.date = new Date();
+        updateFragment();
         super.onResume();
     }
 

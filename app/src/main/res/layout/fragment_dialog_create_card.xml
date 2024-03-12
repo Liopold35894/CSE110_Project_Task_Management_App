@@ -65,7 +65,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/HomeButton"
-                android:layout_width="108dp"
+                android:layout_width="89dp"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:contentDescription="Home"

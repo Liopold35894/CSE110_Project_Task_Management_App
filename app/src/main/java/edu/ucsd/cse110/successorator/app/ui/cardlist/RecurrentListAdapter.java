@@ -65,6 +65,7 @@ public class RecurrentListAdapter extends ArrayAdapter<Goal> {
                 break;
         }
         binding.categoryName.setText(emoji + " " + goal.getCategory().name());
+//        binding.cardFrontText.setText(goal.getName() + goal.getDate().toString());
         int goalId = goal.getId();
         binding.cardFrontText.setOnLongClickListener(v -> {
             // Create a new instance of MoveGoalDialogFragment
