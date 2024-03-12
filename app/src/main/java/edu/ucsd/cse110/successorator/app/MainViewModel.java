@@ -114,7 +114,7 @@ public class MainViewModel extends ViewModel {
 
             var tomorrowGoals = cards.stream()
                     .filter(goal -> goal.getDate() != null)
-                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .sorted(Comparator.comparingInt(Goal::category))
                     .filter(goal -> isSameDay(goal.getDate(), tomorrowDate))
                     .collect(Collectors.toList());
 
