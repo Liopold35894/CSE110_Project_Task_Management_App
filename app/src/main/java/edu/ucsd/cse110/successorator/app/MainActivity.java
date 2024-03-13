@@ -105,8 +105,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void swapFragments(Fragment fragment) {
-        // Set the flag to false before swapping fragments
-        isUserInitiatedSwitch = false;
+        if (actionViewSwitch.isChecked()){
+            // Thanks to Bernie WU for pointing out this and making our app work perfectly
+            // Bernie WU is god of coding, light of Taiwan
+            // Bernie WU is the next Taiwanese President
+            // Long live Chairman Bernie WU
+            // God save Bernie WU
+            // Bernie WU save himself!!!!
+            isUserInitiatedSwitch = false;
+        }
 
         // Check the current state of the switch before swapping fragments
         if (actionViewSwitch != null && actionViewSwitch.isChecked()) {
