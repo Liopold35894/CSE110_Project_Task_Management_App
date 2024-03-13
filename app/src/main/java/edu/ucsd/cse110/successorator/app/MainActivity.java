@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MainViewModel mainViewModel;
 
+    private boolean isUserInitiatedSwitch = true;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +61,16 @@ public class MainActivity extends AppCompatActivity {
             actionViewSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // Invoke the method when the state of the switch changes
-                    showFocusModeDialog(isChecked);
-                    if (!isChecked) {
-                        Toast.makeText(MainActivity.this, "Focus mode off", Toast.LENGTH_SHORT).show();
-                        handleFocusChange(Goal.Category.NONE);
+                    if (isUserInitiatedSwitch) {
+                        if (isChecked) {
+                            showFocusModeDialog(true);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Focus mode off", Toast.LENGTH_SHORT).show();
+                            handleFocusChange(Goal.Category.NONE);
+                        }
+                    } else {
+                        // The switch was changed programmatically, so reset the flag to true for future user interactions
+                        isUserInitiatedSwitch = true;
                     }
                 }
             });
@@ -98,11 +105,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void swapFragments(Fragment fragment) {
+        // Set the flag to false before swapping fragments
+        isUserInitiatedSwitch = false;
+
+        // Check the current state of the switch before swapping fragments
+        if (actionViewSwitch != null && actionViewSwitch.isChecked()) {
+            // The switch is on, keep the focus mode but don't show the dialog
+            mainViewModel.setFocusMode(mainViewModel.getFocusMode().getValue()); // assuming you have a getter for the focus mode
+        } else {
+            // The switch is off, disable the focus mode without showing the dialog
+            mainViewModel.setFocusMode(Goal.Category.NONE);
+        }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
+
 
     private void showFocusModeDialog(boolean isSwitchOn) {
         if (isSwitchOn) {

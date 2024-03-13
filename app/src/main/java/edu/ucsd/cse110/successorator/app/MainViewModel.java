@@ -5,6 +5,7 @@ import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLI
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
@@ -80,7 +81,7 @@ public class MainViewModel extends ViewModel {
         this.focusMode.setValue(mode);
     }
 
-    public Subject<Goal.Category> getFocusMode() {
+    public MutableSubject<Goal.Category> getFocusMode() {
         return focusMode;
     }
 
@@ -310,5 +311,4 @@ public class MainViewModel extends ViewModel {
     public void removeFinishedGoals() {
         goalRepository.removeFinishedGoals();
     }
-
 }
