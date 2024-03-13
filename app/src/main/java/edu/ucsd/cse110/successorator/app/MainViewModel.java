@@ -45,6 +45,8 @@ public class MainViewModel extends ViewModel {
 
     private final MutableSubject<List<Goal>> recurrentGoals;
 
+    private final MutableSubject<Goal.Category> focusMode;
+
     private Date date;
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -68,8 +70,18 @@ public class MainViewModel extends ViewModel {
         this.tomorrowGoal = new SimpleSubject<>();
         this.pendingGoals = new SimpleSubject<>();
         this.recurrentGoals = new SimpleSubject<>();
+        this.focusMode = new SimpleSubject<>();
+        this.setFocusMode(Goal.Category.NONE);
         update();
 
+    }
+
+    public void setFocusMode(Goal.Category mode) {
+        this.focusMode.setValue(mode);
+    }
+
+    public Subject<Goal.Category> getFocusMode() {
+        return focusMode;
     }
 
     public void update() {

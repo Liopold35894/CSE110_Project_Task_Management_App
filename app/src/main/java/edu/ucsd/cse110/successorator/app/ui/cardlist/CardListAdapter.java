@@ -38,12 +38,8 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
         this.date = date;
         this.onDeleteClick = onDeleteClick;
         this.toggleCompleted = togggleCompleted;
-//
-//        for (Goal goal : goals) {
-//            if (isSameDay(goal.getDate(), date)) {
-//                add(goal);
-//            }
-//        }
+
+
     }
 
     private boolean isSameDay(Date date1, Date date2) {

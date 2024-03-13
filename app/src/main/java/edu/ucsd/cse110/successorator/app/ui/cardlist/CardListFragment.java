@@ -109,6 +109,21 @@ public class CardListFragment extends Fragment {
         }, activityModel::toggleCompleted);
         activityModel.getTodayGoals().observe(cards -> {
             if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
+            adapter.clear();
+            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
+            adapter.notifyDataSetChanged();
+        });
+
+        activityModel.getFocusMode().observe(category -> {
+            var card = activityModel.getTodayGoals();
+            var cards = card.getValue();
+            if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();

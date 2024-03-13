@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import edu.ucsd.cse110.successorator.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.CardListFragment;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog focusDialog;
     private Switch actionViewSwitch;
 
+    private MainViewModel mainViewModel;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         setTitle("Successorator");
         this.view = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
+
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
 
     @Override
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     showFocusModeDialog(isChecked);
                     if (!isChecked) {
                         Toast.makeText(MainActivity.this, "Focus mode off", Toast.LENGTH_SHORT).show();
+                        handleFocusChange(Goal.Category.NONE);
                     }
                 }
             });
@@ -152,5 +158,23 @@ public class MainActivity extends AppCompatActivity {
     private void handleFocusChange(Goal.Category category) {
         // Implement what happens when a focus option is selected
         Toast.makeText(this, "Focus mode set to: " + category.name(), Toast.LENGTH_SHORT).show();
+        switch (category) {
+            case HOME:
+                mainViewModel.setFocusMode(Goal.Category.HOME);
+                break;
+            case WORK:
+                mainViewModel.setFocusMode(Goal.Category.WORK);
+                break;
+            case SCHOOL:
+                mainViewModel.setFocusMode(Goal.Category.SCHOOL);
+                break;
+            case ERRANDS:
+                mainViewModel.setFocusMode(Goal.Category.ERRANDS);
+                break;
+            case NONE:
+                mainViewModel.setFocusMode(Goal.Category.NONE);
+                break;
+        }
+
     }
 }
