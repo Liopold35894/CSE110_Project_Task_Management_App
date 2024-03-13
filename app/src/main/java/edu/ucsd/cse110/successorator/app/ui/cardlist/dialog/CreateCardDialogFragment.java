@@ -91,14 +91,14 @@ public class CreateCardDialogFragment extends DialogFragment {
 
     private void updateDateViews(Calendar calendar) {
         // Set the initial date texts for weekly, monthly, and yearly
-        weeklyStart.setText("Weekly on " + new SimpleDateFormat("EEEE", Locale.US).format(calendar.getTime()));
+        weeklyStart.setText("on " + new SimpleDateFormat("EEEE", Locale.US).format(calendar.getTime()));
 
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         int dayOfWeekInMonth = (dayOfMonth - 1) / 7 + 1;
         String dayOfWeek = getDayOfWeekInMonth(dayOfWeekInMonth) + " " + new SimpleDateFormat("EEEE", Locale.US).format(calendar.getTime());
-        monthlyStart.setText("Monthly on " + dayOfWeek);
+        monthlyStart.setText("on " + dayOfWeek);
 
-        yearlyStart.setText("Yearly on " + new SimpleDateFormat("MM/dd", Locale.US).format(calendar.getTime()));
+        yearlyStart.setText("on " + new SimpleDateFormat("MM/dd", Locale.US).format(calendar.getTime()));
     }
 
     // Helper method to get the ordinal indicator for the day of the week in a month
