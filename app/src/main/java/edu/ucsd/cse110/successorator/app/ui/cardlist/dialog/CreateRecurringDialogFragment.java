@@ -136,7 +136,7 @@ public class CreateRecurringDialogFragment extends DialogFragment {
 
     private void onCategoryButtonClick(Goal.Category clickedCategory, String button) {
         selectedCategory = clickedCategory;
-        var back = binding.getRoot().findViewById(R.id.radioGroup);
+        var back = binding.getRoot().findViewById(R.id.card_front_edit_text);
 
         switch (button) {
             case "h":

@@ -38,14 +38,14 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<List<Goal>> orderedCards;
     private final MutableSubject<String> displayedText;
 
-    private final MutableSubject<List<Goal>> todayGoal;
+    private  MutableSubject<List<Goal>> todayGoal;
 
     private final MutableSubject<List<Goal>> tomorrowGoal;
     private final MutableSubject<List<Goal>> pendingGoals;
 
     private final MutableSubject<List<Goal>> recurrentGoals;
 
-    private final Date date;
+    private Date date;
 
     public static final ViewModelInitializer<MainViewModel> initializer =
         new ViewModelInitializer<>(
@@ -73,6 +73,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void update() {
+        this.date = new Date();
         // When the list of cards changes (or is first loaded), reset the ordering.
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {
@@ -94,7 +95,7 @@ public class MainViewModel extends ViewModel {
             var todayGoals = cards.stream()
                     .filter(goal -> goal.getDate() != null)
                     .sorted(Comparator.comparingInt(Goal::category))
-                    .filter(goal -> goal.getDate().before(tomorrowDate))
+                    .filter(goal -> goal.getDate().before(date) || isSameDay(goal.getDate(),date))
                     .collect(Collectors.toList());
 
             this.todayGoal.setValue(todayGoals);
@@ -291,6 +292,7 @@ public class MainViewModel extends ViewModel {
 
     public void addBehindUnfinishedAndInFrontOfFinished(Goal card) {
         goalRepository.addGoalBetweenFinishedAndUnfinished(card);
+        update();
     }
 
     public void removeFinishedGoals() {

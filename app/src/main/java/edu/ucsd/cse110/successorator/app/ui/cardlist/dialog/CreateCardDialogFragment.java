@@ -155,7 +155,7 @@ public class CreateCardDialogFragment extends DialogFragment {
 
     private void onCategoryButtonClick(Goal.Category clickedCategory) {
         selectedCategory = clickedCategory;
-        view.getRoot().findViewById(R.id.radioGroup).setBackgroundColor(getCategoryColor(selectedCategory));
+        view.getRoot().findViewById(R.id.card_front_edit_text).setBackgroundColor(getCategoryColor(selectedCategory));
     }
 
     private int getCategoryColor(Goal.Category category) {
