@@ -85,8 +85,15 @@ public class MainViewModel extends ViewModel {
         return focusMode;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public void update() {
-        this.date = new Date();
         // When the list of cards changes (or is first loaded), reset the ordering.
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {

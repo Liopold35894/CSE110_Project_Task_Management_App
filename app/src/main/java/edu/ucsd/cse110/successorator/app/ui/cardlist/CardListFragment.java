@@ -60,7 +60,6 @@ public class CardListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.date = Calendar.getInstance().getTime();
 
         if (!isMenuProviderAdded) {
             requireActivity().addMenuProvider(new MenuProvider() {
@@ -103,7 +102,7 @@ public class CardListFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new CardListAdapter(requireContext(), List.of(), date, id -> {
+        this.adapter = new CardListAdapter(requireContext(), List.of(), id -> {
             var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
             dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
         }, activityModel::toggleCompleted);
@@ -154,6 +153,13 @@ public class CardListFragment extends Fragment {
             calendar.add(Calendar.HOUR_OF_DAY, 24);
             this.date = calendar.getTime();
             updateFragment();
+            activityModel.setDate(date);
+        });
+
+        view.reset.setOnClickListener(v -> {
+            this.date = new Date();
+            activityModel.setDate(date);
+            updateFragment();
         });
         return view.getRoot();
     }
@@ -161,6 +167,7 @@ public class CardListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.date = activityModel.getDate();
         updateFragment();
     }
 
@@ -185,7 +192,6 @@ public class CardListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        this.date = new Date();
         updateFragment();
         super.onResume();
     }

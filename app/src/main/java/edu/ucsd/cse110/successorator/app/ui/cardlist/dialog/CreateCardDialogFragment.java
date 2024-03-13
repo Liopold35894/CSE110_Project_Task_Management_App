@@ -78,7 +78,9 @@ public class CreateCardDialogFragment extends DialogFragment {
         weeklyStart = view.getRoot().findViewById(R.id.weekly_start);
         monthlyStart = view.getRoot().findViewById(R.id.monthly_start);
         yearlyStart = view.getRoot().findViewById(R.id.yearly_start);
-        updateDateViews(Calendar.getInstance());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(activityModel.getDate());
+        updateDateViews(calendar);
 
         return new AlertDialog.Builder(requireContext())
                 .setTitle("New Goal")
