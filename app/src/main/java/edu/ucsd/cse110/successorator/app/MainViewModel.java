@@ -93,7 +93,7 @@ public class MainViewModel extends ViewModel {
 
             var todayGoals = cards.stream()
                     .filter(goal -> goal.getDate() != null)
-                    .sorted(Comparator.comparingInt(Goal::sortOrder))
+                    .sorted(Comparator.comparingInt(Goal::category))
                     .filter(goal -> goal.getDate().before(tomorrowDate))
                     .collect(Collectors.toList());
 
