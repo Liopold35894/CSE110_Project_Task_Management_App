@@ -9,25 +9,25 @@
             android:id="@+id/button_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="HOME" />
+            android:text="🏠 HOME" />
 
     <Button
             android:id="@+id/button_work"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="WORK" />
+            android:text="💼 WORK" />
 
     <Button
             android:id="@+id/button_school"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SCHOOL" />
+            android:text="🏫 SCHOOL" />
 
     <Button
             android:id="@+id/button_errands"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ERRANDS" />
+            android:text="🗒 ERRANDS" />
 
     <Button
             android:id="@+id/button_cancel"
