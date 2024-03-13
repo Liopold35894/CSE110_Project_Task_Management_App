@@ -176,8 +176,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleFocusChange(Goal.Category category) {
+        if (category != Goal.Category.NONE) {
+            Toast.makeText(this, "Focus mode set to: " + category.name(), Toast.LENGTH_SHORT).show();
+        }
         // Implement what happens when a focus option is selected
-        Toast.makeText(this, "Focus mode set to: " + category.name(), Toast.LENGTH_SHORT).show();
         switch (category) {
             case HOME:
                 mainViewModel.setFocusMode(Goal.Category.HOME);
