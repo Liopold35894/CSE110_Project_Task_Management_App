@@ -4,6 +4,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,12 +22,13 @@ import edu.ucsd.cse110.successorator.app.ui.cardlist.CardListFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.PendingFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.TomorrowFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.RecurrentFragment;
-
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding view;
-
+    private AlertDialog focusDialog;
+    private Switch actionViewSwitch;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,8 +43,29 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar, menu);
+
+        // Find the menu item with the Switch
+        MenuItem switchItem = menu.findItem(R.id.action_bar_menu_switch); // ID for the menu item
+        // Get the action view of the item
+        actionViewSwitch = (Switch) switchItem.getActionView().findViewById(R.id.action_bar_menu_switch); // ID for the switch inside the actionLayout
+
+        // Check if the Switch is not null
+        if (actionViewSwitch != null) {
+            actionViewSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    // Invoke the method when the state of the switch changes
+                    showFocusModeDialog(isChecked);
+                    if (!isChecked) {
+                        Toast.makeText(MainActivity.this, "Focus mode off", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
         return true;
     }
+
 
 
     @Override
@@ -69,5 +98,59 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    private void showFocusModeDialog(boolean isSwitchOn) {
+        if (isSwitchOn) {
+            // Inflate the dialog view
+            LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+            View dialogView = inflater.inflate(R.layout.dialog_focus_mode, null);
 
+            // Initialize AlertDialog.Builder with the custom layout
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Focus Mode")
+                    .setMessage("What do you want to focus on?")
+                    .setView(dialogView)
+                    .setCancelable(false);
+
+            focusDialog = builder.create();
+            focusDialog.show();
+
+            // Setup button click handlers
+            setupFocusDialogButtons(dialogView);
+        } else if (focusDialog != null) {
+            // Hide the dialog if the switch is turned off
+            focusDialog.dismiss();
+        }
+    }
+
+    private void setupFocusDialogButtons(View dialogView) {
+        dialogView.findViewById(R.id.button_home).setOnClickListener(v -> {
+            handleFocusChange(Goal.Category.HOME);
+            focusDialog.dismiss();
+        });
+
+        dialogView.findViewById(R.id.button_work).setOnClickListener(v -> {
+            handleFocusChange(Goal.Category.WORK);
+            focusDialog.dismiss();
+        });
+
+        dialogView.findViewById(R.id.button_school).setOnClickListener(v -> {
+            handleFocusChange(Goal.Category.SCHOOL);
+            focusDialog.dismiss();
+        });
+
+        dialogView.findViewById(R.id.button_errands).setOnClickListener(v -> {
+            handleFocusChange(Goal.Category.ERRANDS);
+            focusDialog.dismiss();
+        });
+
+        dialogView.findViewById(R.id.button_cancel).setOnClickListener(v -> {
+            focusDialog.dismiss();
+            actionViewSwitch.setChecked(false);
+        });
+    }
+
+    private void handleFocusChange(Goal.Category category) {
+        // Implement what happens when a focus option is selected
+        Toast.makeText(this, "Focus mode set to: " + category.name(), Toast.LENGTH_SHORT).show();
+    }
 }
