@@ -7,13 +7,10 @@
 
     <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="307dp"
+            android:layout_width="108dp"
             android:layout_height="238dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="100dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_front_edit_text">
 
@@ -24,6 +21,7 @@
                 android:checked="true"
                 android:elegantTextHeight="true"
                 android:text="one-time" />
+
 
         <RadioButton
                 android:id="@+id/dailyButton"
@@ -50,6 +48,41 @@
                 android:text="yearly" />
 
     </RadioGroup>
+
+    <EditText
+            android:id="@+id/weekly_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="264dp"
+            android:ems="10"
+            android:inputType="date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.506"
+            app:layout_constraintStart_toEndOf="@+id/radioGroup"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+            android:id="@+id/monthly_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/radioGroup"
+            app:layout_constraintTop_toBottomOf="@+id/weekly_start" />
+
+    <EditText
+            android:id="@+id/yearly_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.506"
+            app:layout_constraintStart_toEndOf="@+id/radioGroup"
+            app:layout_constraintTop_toBottomOf="@+id/monthly_start"
+            app:layout_constraintVertical_bias="0.0" />
 
     <FrameLayout
             android:id="@+id/frameLayout1"
