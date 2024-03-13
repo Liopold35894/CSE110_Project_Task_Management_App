@@ -25,17 +25,14 @@ public class CardListAdapter extends ArrayAdapter<Goal> {
     Consumer<Integer> onDeleteClick;
     Consumer<Goal> toggleCompleted;
 
-    private Date date;
 
-
-    public CardListAdapter(Context context, List<Goal> goals, Date date, Consumer<Integer> onDeleteClick, Consumer<Goal> togggleCompleted) {
+    public CardListAdapter(Context context, List<Goal> goals, Consumer<Integer> onDeleteClick, Consumer<Goal> togggleCompleted) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
         //
         // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
         // or it will crash!
         super(context, 0, new ArrayList<>(goals));
-        this.date = date;
         this.onDeleteClick = onDeleteClick;
         this.toggleCompleted = togggleCompleted;
 

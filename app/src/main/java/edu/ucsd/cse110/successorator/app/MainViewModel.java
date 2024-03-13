@@ -85,8 +85,15 @@ public class MainViewModel extends ViewModel {
         return focusMode;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public void update() {
-        this.date = new Date();
         // When the list of cards changes (or is first loaded), reset the ordering.
         goalRepository.findAll().observe(cards -> {
             if (cards == null) {
@@ -162,11 +169,10 @@ public class MainViewModel extends ViewModel {
         SharedPreferences prefs = context.getSharedPreferences("successorator", Context.MODE_PRIVATE);
         long nextClear = prefs.getLong("nextClear", 0);
         Calendar nextClearTime = Calendar.getInstance();
-
+        addRecurringGoals();
         if (nextClear > 0) {
             nextClearTime.setTimeInMillis(nextClear);
 
-            addRecurringGoals();
             if (currentTime.after(nextClearTime)) {
                 goalRepository.removeFinishedGoals();
             }
@@ -200,6 +206,7 @@ public class MainViewModel extends ViewModel {
             var oldId = goal.getId();
             Date goalDate = goal.getDate();
             Calendar yesterday = Calendar.getInstance();
+            yesterday.setTime(this.date);
             yesterday.add(Calendar.DAY_OF_YEAR,-1);
             Date today = yesterday.getTime();
 
