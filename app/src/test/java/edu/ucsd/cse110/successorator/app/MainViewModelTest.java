@@ -796,4 +796,28 @@ public class MainViewModelTest {
         dataSource.removeGoal(3);
         assertEquals("Errands", model.getOrderedCards().getValue().get(0).getName());
     }
+
+    //US 12 Scenario 1: Using Focus Mode to Filter Goals by Category
+    @Test
+    public void testFocusModeFilterByCategory() {
+        List<Goal> GOALS = List.of(
+                new Goal(0, "Home", false, 1, new Date(), Goal.RepeatInterval.ONE_TIME, Goal.Category.HOME),
+                new Goal(1, "Work", false, 2, new Date(), Goal.RepeatInterval.ONE_TIME, Goal.Category.WORK),
+                new Goal(2, "School", false, 3, new Date(), Goal.RepeatInterval.ONE_TIME, Goal.Category.SCHOOL),
+                new Goal(3, "Errands", false, 4, new Date(), Goal.RepeatInterval.ONE_TIME, Goal.Category.ERRANDS)
+        );
+        dataSource.putGoals(GOALS);
+
+        model.setFocusMode(Goal.Category.HOME);
+        assertEquals(Goal.Category.HOME, model.getFocusMode().getValue());
+
+        model.setFocusMode(Goal.Category.WORK);
+        assertEquals(Goal.Category.WORK, model.getFocusMode().getValue());
+
+        model.setFocusMode(Goal.Category.SCHOOL);
+        assertEquals(Goal.Category.SCHOOL, model.getFocusMode().getValue());
+
+        model.setFocusMode(Goal.Category.ERRANDS);
+        assertEquals(Goal.Category.ERRANDS, model.getFocusMode().getValue());
+    }
 }
