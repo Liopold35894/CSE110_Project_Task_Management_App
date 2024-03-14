@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
 import edu.ucsd.cse110.successorator.app.R;
@@ -28,6 +29,7 @@ import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.ConfirmDeleteCardDia
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreateCardDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.CreatePendingDialogFragment;
 import edu.ucsd.cse110.successorator.app.ui.cardlist.dialog.MoveGoalDialogFragment;
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 public class PendingFragment extends Fragment {
     private MainViewModel activityModel;
@@ -102,6 +104,21 @@ public class PendingFragment extends Fragment {
         });
         activityModel.getPendingGoals().observe(cards -> {
             if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
+            adapter.clear();
+            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
+            adapter.notifyDataSetChanged();
+        });
+
+        activityModel.getFocusMode().observe(category -> {
+            var card = activityModel.getPendingGoals();
+            var cards = card.getValue();
+            if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();

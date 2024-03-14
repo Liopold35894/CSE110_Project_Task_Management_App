@@ -13,9 +13,10 @@
             android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/createCardButton"
+            app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/list_item_card">
 
     </ListView>
@@ -23,11 +24,12 @@
 
     <ImageButton
             android:id="@+id/forward"
-            android:layout_width="53dp"
-            android:layout_height="46dp"
+            android:layout_width="38dp"
+            android:layout_height="30dp"
             android:layout_marginTop="16dp"
             android:background="#FFFFFF"
             android:src="@drawable/calendar_add"
+            app:layout_constraintBottom_toTopOf="@+id/reset"
             app:layout_constraintEnd_toStartOf="@+id/createCardButton"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,5 +75,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+            android:id="@+id/reset"
+            android:layout_width="27dp"
+            android:layout_height="30dp"
+            android:background="#FFFFFF"
+            android:src="@drawable/reset"
+            app:layout_constraintEnd_toStartOf="@+id/createCardButton"
+            app:layout_constraintStart_toStartOf="@+id/forward"
+            app:layout_constraintTop_toBottomOf="@+id/forward" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

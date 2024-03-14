@@ -5,6 +5,7 @@ import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLI
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
@@ -38,14 +39,16 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<List<Goal>> orderedCards;
     private final MutableSubject<String> displayedText;
 
-    private final MutableSubject<List<Goal>> todayGoal;
+    private  MutableSubject<List<Goal>> todayGoal;
 
     private final MutableSubject<List<Goal>> tomorrowGoal;
     private final MutableSubject<List<Goal>> pendingGoals;
 
     private final MutableSubject<List<Goal>> recurrentGoals;
 
-    private final Date date;
+    private final MutableSubject<Goal.Category> focusMode;
+
+    private Date date;
 
     public static final ViewModelInitializer<MainViewModel> initializer =
         new ViewModelInitializer<>(
@@ -68,8 +71,26 @@ public class MainViewModel extends ViewModel {
         this.tomorrowGoal = new SimpleSubject<>();
         this.pendingGoals = new SimpleSubject<>();
         this.recurrentGoals = new SimpleSubject<>();
+        this.focusMode = new SimpleSubject<>();
+        this.setFocusMode(Goal.Category.NONE);
         update();
 
+    }
+
+    public void setFocusMode(Goal.Category mode) {
+        this.focusMode.setValue(mode);
+    }
+
+    public MutableSubject<Goal.Category> getFocusMode() {
+        return focusMode;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void update() {
@@ -93,8 +114,8 @@ public class MainViewModel extends ViewModel {
 
             var todayGoals = cards.stream()
                     .filter(goal -> goal.getDate() != null)
-                    .sorted(Comparator.comparingInt(Goal::sortOrder))
-                    .filter(goal -> goal.getDate().before(tomorrowDate))
+                    .sorted(Comparator.comparingInt(Goal::category))
+                    .filter(goal -> goal.getDate().before(date) || isSameDay(goal.getDate(),date))
                     .collect(Collectors.toList());
 
             this.todayGoal.setValue(todayGoals);
@@ -148,11 +169,10 @@ public class MainViewModel extends ViewModel {
         SharedPreferences prefs = context.getSharedPreferences("successorator", Context.MODE_PRIVATE);
         long nextClear = prefs.getLong("nextClear", 0);
         Calendar nextClearTime = Calendar.getInstance();
-
+        addRecurringGoals();
         if (nextClear > 0) {
             nextClearTime.setTimeInMillis(nextClear);
 
-            addRecurringGoals();
             if (currentTime.after(nextClearTime)) {
                 goalRepository.removeFinishedGoals();
             }
@@ -186,6 +206,7 @@ public class MainViewModel extends ViewModel {
             var oldId = goal.getId();
             Date goalDate = goal.getDate();
             Calendar yesterday = Calendar.getInstance();
+            yesterday.setTime(this.date);
             yesterday.add(Calendar.DAY_OF_YEAR,-1);
             Date today = yesterday.getTime();
 
@@ -291,10 +312,10 @@ public class MainViewModel extends ViewModel {
 
     public void addBehindUnfinishedAndInFrontOfFinished(Goal card) {
         goalRepository.addGoalBetweenFinishedAndUnfinished(card);
+        update();
     }
 
     public void removeFinishedGoals() {
         goalRepository.removeFinishedGoals();
     }
-
 }

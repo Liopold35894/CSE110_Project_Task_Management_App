@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.app.MainViewModel;
 import edu.ucsd.cse110.successorator.app.R;
@@ -106,8 +107,23 @@ public class RecurrentFragment extends Fragment {
             dialogFragment.show(getParentFragmentManager(), "DeleteRecurrentGoalDialogFragment");
         });
         activityModel.getRecurrentGoals().observe(recurrentGoals -> {
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                recurrentGoals = recurrentGoals.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
             adapter.clear();
             adapter.addAll(new ArrayList<>(recurrentGoals)); // Ensure you're working with a mutable copy
+            adapter.notifyDataSetChanged();
+        });
+
+        activityModel.getFocusMode().observe(category -> {
+            var card = activityModel.getRecurrentGoals();
+            var cards = card.getValue();
+            if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
+            adapter.clear();
+            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }

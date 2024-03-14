@@ -58,9 +58,7 @@ public class TomorrowFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);  // Add 1 day to get tomorrow's date
-        this.date = calendar.getTime();
+
 
 
         requireActivity().addMenuProvider(new MenuProvider() {
@@ -107,16 +105,32 @@ public class TomorrowFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new CardListAdapter(requireContext(), List.of(), date, id -> {
+        this.adapter = new CardListAdapter(requireContext(), List.of(), id -> {
             var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
             dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
         }, activityModel::toggleCompleted);
         activityModel.getTomorrowGoals().observe(cards -> {
             if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
+
+        activityModel.getFocusMode().observe(category -> {
+            var card = activityModel.getTomorrowGoals();
+            var cards = card.getValue();
+            if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
+            adapter.clear();
+            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
+            adapter.notifyDataSetChanged();
+        });
+
     }
 
 
@@ -129,7 +143,7 @@ public class TomorrowFragment extends Fragment {
         view.cardList.setAdapter(adapter);
 
         view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreateCardDialogFragment.newInstance("tomorrow");
+            var dialogFragment = CreateCardDialogFragment.newInstance("tomorrow",date);
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
@@ -139,6 +153,11 @@ public class TomorrowFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(activityModel.getDate());
+        calendar.add(Calendar.DAY_OF_YEAR, 1);  // Add 1 day to get tomorrow's date
+        this.date = calendar.getTime();
+
 
         var dateFormat = new SimpleDateFormat("EEE M/dd", Locale.getDefault());
         var formattedDate = dateFormat.format(date);

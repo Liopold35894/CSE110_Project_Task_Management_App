@@ -60,7 +60,6 @@ public class CardListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.date = Calendar.getInstance().getTime();
 
         if (!isMenuProviderAdded) {
             requireActivity().addMenuProvider(new MenuProvider() {
@@ -103,12 +102,27 @@ public class CardListFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new CardListAdapter(requireContext(), List.of(), date, id -> {
+        this.adapter = new CardListAdapter(requireContext(), List.of(), id -> {
             var dialogFragment = ConfirmDeleteCardDialogFragment.newInstance(id);
             dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteCardDialogFragment");
         }, activityModel::toggleCompleted);
         activityModel.getTodayGoals().observe(cards -> {
             if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
+            adapter.clear();
+            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
+            adapter.notifyDataSetChanged();
+        });
+
+        activityModel.getFocusMode().observe(category -> {
+            var card = activityModel.getTodayGoals();
+            var cards = card.getValue();
+            if (cards == null) return;
+            if (activityModel.getFocusMode().getValue() != Goal.Category.NONE) {
+                cards = cards.stream().filter(goal -> goal.getCategory() == activityModel.getFocusMode().getValue()).collect(Collectors.toList());
+            }
             adapter.clear();
             adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
@@ -128,7 +142,7 @@ public class CardListFragment extends Fragment {
         view.cardList.setAdapter(adapter);
 
         view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreateCardDialogFragment.newInstance("today");
+            var dialogFragment = CreateCardDialogFragment.newInstance("today",date);
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
@@ -139,6 +153,13 @@ public class CardListFragment extends Fragment {
             calendar.add(Calendar.HOUR_OF_DAY, 24);
             this.date = calendar.getTime();
             updateFragment();
+            activityModel.setDate(date);
+        });
+
+        view.reset.setOnClickListener(v -> {
+            this.date = new Date();
+            activityModel.setDate(date);
+            updateFragment();
         });
         return view.getRoot();
     }
@@ -146,6 +167,7 @@ public class CardListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.date = activityModel.getDate();
         updateFragment();
     }
 
@@ -170,7 +192,6 @@ public class CardListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        this.date = new Date();
         updateFragment();
         super.onResume();
     }

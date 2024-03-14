@@ -3,6 +3,7 @@ package edu.ucsd.cse110.successorator.app.ui.cardlist.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -27,6 +28,11 @@ public class CreatePendingDialogFragment extends DialogFragment {
     private MainViewModel activityModel;
 
     private Goal.Category selectedCategory = Goal.Category.NONE;
+
+    FloatingActionButton homeButton;
+    FloatingActionButton workButton;
+    FloatingActionButton schoolButton;
+    FloatingActionButton errandsButton;
 
     CreatePendingDialogFragment() {
 
@@ -54,6 +60,10 @@ public class CreatePendingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         this.view = FragmentDialogCreatePendingBinding.inflate(getLayoutInflater());
 
+        homeButton = view.getRoot().findViewById(R.id.HomeButton);
+        workButton = view.getRoot().findViewById(R.id.WorkButton);
+        schoolButton = view.getRoot().findViewById(R.id.SchoolButton);
+        errandsButton = view.getRoot().findViewById(R.id.ErrandsButton);
         setUpCategoryButtonClickListeners();
 
         return new AlertDialog.Builder(getActivity())
@@ -88,19 +98,32 @@ public class CreatePendingDialogFragment extends DialogFragment {
     }
 
     private void setUpCategoryButtonClickListeners() {
-        FloatingActionButton homeButton = view.getRoot().findViewById(R.id.HomeButton);
-        FloatingActionButton workButton = view.getRoot().findViewById(R.id.WorkButton);
-        FloatingActionButton schoolButton = view.getRoot().findViewById(R.id.SchoolButton);
-        FloatingActionButton errandsButton = view.getRoot().findViewById(R.id.ErrandsButton);
 
-        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME));
-        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK));
-        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL));
-        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS));
+        homeButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.HOME, "h"));
+        workButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.WORK,"w"));
+        schoolButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.SCHOOL, "s"));
+        errandsButton.setOnClickListener(v -> onCategoryButtonClick(Goal.Category.ERRANDS, "e"));
+
     }
 
-    private void onCategoryButtonClick(Goal.Category clickedCategory) {
+    private void onCategoryButtonClick(Goal.Category clickedCategory, String button) {
         selectedCategory = clickedCategory;
-    }
+        var back = view.getRoot().findViewById(R.id.card_front_edit_text);
 
+        switch (button) {
+            case "h":
+                back.setBackgroundColor(Color.rgb(255,255,153));
+                break;
+            case "w":
+                back.setBackgroundColor(Color.rgb(153,255,255));
+                break;
+            case "s":
+                back.setBackgroundColor(Color.rgb(204,153,255));
+                break;
+            case "e":
+                back.setBackgroundColor(Color.rgb(153,255,153));
+                break;
+        }
+
+    }
 }
