@@ -45,13 +45,18 @@ public class CreateCardDialogFragment extends DialogFragment {
     EditText monthlyStart;
     EditText yearlyStart;
 
+    private static final String ARG_DATE = "date";
+    private Date selectedDate;
+
+
     public CreateCardDialogFragment() {
     }
 
-    public static CreateCardDialogFragment newInstance(String fragmentType) {
+    public static CreateCardDialogFragment newInstance(String fragmentType, Date date) {
         CreateCardDialogFragment fragment = new CreateCardDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_FRAGMENT_TYPE, fragmentType);
+        args.putSerializable(ARG_DATE, date);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +67,7 @@ public class CreateCardDialogFragment extends DialogFragment {
 
         activityModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         fragmentType = requireArguments().getString(ARG_FRAGMENT_TYPE);
+        selectedDate = (Date) requireArguments().getSerializable(ARG_DATE);
     }
 
     @NonNull
@@ -80,7 +86,7 @@ public class CreateCardDialogFragment extends DialogFragment {
         yearlyStart = view.getRoot().findViewById(R.id.yearly_start);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(activityModel.getDate());
-        updateDateViews(calendar);
+        updateDateViews(selectedDate);
 
         return new AlertDialog.Builder(requireContext())
                 .setTitle("New Goal")
@@ -91,16 +97,27 @@ public class CreateCardDialogFragment extends DialogFragment {
                 .create();
     }
 
-    private void updateDateViews(Calendar calendar) {
+    private void updateDateViews(Date date) {
         // Set the initial date texts for weekly, monthly, and yearly
-        weeklyStart.setText("on " + new SimpleDateFormat("EEEE", Locale.US).format(calendar.getTime()));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
 
+        // For weekly start date
+        Calendar weeklyCalendar = Calendar.getInstance();
+        weeklyCalendar.setTime(date);
+        if (weeklyCalendar.before(calendar)) {
+            weeklyCalendar.add(Calendar.WEEK_OF_YEAR, 1); // If the specified weekday is before the selected date, move to next week
+        }
+        weeklyStart.setText("Weekly on " + new SimpleDateFormat("EEEE", Locale.US).format(weeklyCalendar.getTime()));
+
+        // For monthly start date
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         int dayOfWeekInMonth = (dayOfMonth - 1) / 7 + 1;
         String dayOfWeek = getDayOfWeekInMonth(dayOfWeekInMonth) + " " + new SimpleDateFormat("EEEE", Locale.US).format(calendar.getTime());
-        monthlyStart.setText("on " + dayOfWeek);
+        monthlyStart.setText("Monthly on " + dayOfWeek);
 
-        yearlyStart.setText("on " + new SimpleDateFormat("MM/dd", Locale.US).format(calendar.getTime()));
+        // For yearly start date
+        yearlyStart.setText("Yearly on " + new SimpleDateFormat("MM/dd", Locale.US).format(calendar.getTime()));
     }
 
     // Helper method to get the ordinal indicator for the day of the week in a month
@@ -108,6 +125,7 @@ public class CreateCardDialogFragment extends DialogFragment {
         String[] suffixes = new String[]{"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"};
         return n + suffixes[n % 10];
     }
+
 
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
         if (selectedCategory == Goal.Category.NONE) {

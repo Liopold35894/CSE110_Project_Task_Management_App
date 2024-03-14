@@ -142,7 +142,7 @@ public class CardListFragment extends Fragment {
         view.cardList.setAdapter(adapter);
 
         view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreateCardDialogFragment.newInstance("today");
+            var dialogFragment = CreateCardDialogFragment.newInstance("today",date);
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 

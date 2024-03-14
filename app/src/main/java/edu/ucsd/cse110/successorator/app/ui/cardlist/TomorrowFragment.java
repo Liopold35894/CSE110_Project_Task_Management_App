@@ -143,7 +143,7 @@ public class TomorrowFragment extends Fragment {
         view.cardList.setAdapter(adapter);
 
         view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreateCardDialogFragment.newInstance("tomorrow");
+            var dialogFragment = CreateCardDialogFragment.newInstance("tomorrow",date);
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
