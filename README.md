@@ -1,4 +1,4 @@
-#Task Management App: Succesorator
+#Task Management App: Succesorator#
 
 We make an task management app for user to track tasks, set category, set date, and set repeated tasks with repeat intervals.
 
